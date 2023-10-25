@@ -1,8 +1,6 @@
 #ifndef UUID_H
 #define UUID_H
 
-#include <random>
-
 namespace overflow
 {
     struct UUID

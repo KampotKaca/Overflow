@@ -10,7 +10,8 @@ namespace overflow
 		m_Data.Size = props.Size;
 
 		CORE_INFO("Trying to create window {0} ({1}, {2})", props.Title, props.Size.x, props.Size.y);
-		CORE_ASSERT(glfwInit(), "Unable to initialize GLFW")
+		int glfwInitialized = glfwInit();
+		CORE_ASSERT(glfwInitialized, "Unable to initialize GLFW")
 
 		if(props.DebugOn) glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
 		else glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_FALSE);
@@ -18,6 +19,7 @@ namespace overflow
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, props.Version.x);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, props.Version.y);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, (int)props.Profile);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
 		GLFWmonitor* monitor = nullptr;
 		switch (props.ScaleMode)
@@ -40,10 +42,9 @@ namespace overflow
 				break;
 		}
 
-
 		m_Window = glfwCreateWindow(m_Data.Size.x, m_Data.Size.y,
 									m_Data.Title.c_str(), monitor, nullptr);
-		CORE_ASSERT(m_Window != nullptr, "Unable to create window")
+		CORE_ASSERT(m_Window, "Unable to create window")
 
 		glfwMakeContextCurrent(m_Window);
 		glfwSetWindowUserPointer(m_Window, &m_Data);
@@ -66,7 +67,12 @@ namespace overflow
 
 		for (auto & imageP : imagePs) stbi_image_free(imageP);
 
-		CORE_ASSERT(gladLoadGL(), "Unable to initialize GLAD")
+		if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		{
+			Terminate();
+			CORE_ASSERT(false, "Unable to initialize GLAD")
+		}
+
 		utils::EnableGLDebugging();
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

@@ -1,6 +1,6 @@
 #include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <backends/imgui_impl_glfw.h>
 
 #include "pch.h"
 
@@ -28,6 +28,7 @@ namespace overflow::edit
 
 		Engine::Init(props);
 		Engine::SetRenderFuncPtr(RenderImGui);
+
 		InitImGui("fonts/noto_sans/Bold.ttf", "fonts/noto_sans/Medium.ttf");
 
 		EditorWindowManager::Create<HierarchyWindow>("Hierarchy");

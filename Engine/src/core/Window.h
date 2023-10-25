@@ -7,7 +7,7 @@ namespace overflow
 {
 	enum class VSyncMode { None = 0, Full = 1, Half = 2 };
 	enum class WindowScaleMode { Windowed = 0, Maximized = 1, FullScreen = 2 };
-	enum class OpenGlProfile { Compatibility = 0x00032001, Core = 0x00032002 };
+	enum class OpenGlProfile { Compatibility = 0x00032002, Core = 0x00032001 };
 
 	struct WindowProps
 	{

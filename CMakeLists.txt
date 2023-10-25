@@ -26,18 +26,19 @@ option(EDITOR "Editor build mode" ON)
 if(EDITOR)
     add_definitions(-DEDITOR)
 
-file(GLOB_RECURSE SRC CONFIGURE_DEPENDS Editor/include/imgui/imgui.cpp
-                                        Editor/include/imgui/imgui_demo.cpp
-                                        Editor/include/imgui/imgui_draw.cpp
-                                        Editor/include/imgui/imgui_tables.cpp
-                                        Editor/include/imgui/imgui_widgets.cpp
-                                        Editor/include/imgui/backends/imgui_impl_glfw.cpp
-                                        Editor/include/imgui/backends/imgui_impl_opengl3.cpp
-                                        Editor/src/*.cpp)
+file(GLOB_RECURSE IMGUI CONFIGURE_DEPENDS Editor/include/imgui/imgui.cpp
+                                          Editor/include/imgui/imgui_demo.cpp
+                                          Editor/include/imgui/imgui_draw.cpp
+                                          Editor/include/imgui/imgui_tables.cpp
+                                          Editor/include/imgui/imgui_widgets.cpp
+                                          Editor/include/imgui/backends/imgui_impl_glfw.cpp
+                                          Editor/include/imgui/backends/imgui_impl_opengl3.cpp)
+file(GLOB_RECURSE SRC CONFIGURE_DEPENDS Editor/src/*.cpp)
+file(GLOB_RECURSE YAML CONFIGURE_DEPENDS Editor/include/yaml-cpp/src/*.cpp)
 endif ()
 
 add_subdirectory(Engine)
-add_executable(Overflow ${SRC})
+add_executable(Overflow ${IMGUI} ${YAML} ${SRC})
 
 target_link_libraries(Overflow PRIVATE Engine)
 
@@ -46,6 +47,7 @@ target_include_directories(Overflow PUBLIC Editor/src/)
 target_include_directories(Overflow PUBLIC Editor/)
 target_include_directories(Overflow PUBLIC Editor/include/)
 target_include_directories(Overflow PUBLIC Editor/include/imgui)
+target_include_directories(Overflow PUBLIC Editor/include/yaml-cpp/include)
 endif ()
 
 target_include_directories(Overflow PUBLIC Engine/)
@@ -62,5 +64,6 @@ set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/Editor/res/") #DEBUG
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    file(COPY ${CMAKE_SOURCE_DIR}/Editor/res DESTINATION ${CMAKE_BINARY_DIR}/res)
     target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RES_PATH="${CMAKE_CURRENT_SOURCE_DIR}./res/") #BUILD
 endif()

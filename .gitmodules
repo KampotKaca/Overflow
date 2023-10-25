@@ -8,3 +8,6 @@
 	path = Editor/include/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "Editor/include/yaml-cpp"]
+	path = Editor/include/yaml-cpp
+	url = https://github.com/KampotKaca/yaml-cpp.git

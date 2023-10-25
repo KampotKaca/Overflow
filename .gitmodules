@@ -1,0 +1,10 @@
+[submodule "Engine/include/spdlog"]
+	path = Engine/include/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "Engine/include/glm"]
+	path = Engine/include/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "Editor/include/imgui"]
+	path = Editor/include/imgui
+	url = https://github.com/ocornut/imgui.git
+	branch = docking

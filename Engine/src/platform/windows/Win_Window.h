@@ -22,7 +22,8 @@ namespace overflow
 
 		void BeginDraw() override;
 		void EndDraw() override;
-
+		void Update() override;
+	
 	private:
 		GLFWwindow* m_Window = nullptr;
 

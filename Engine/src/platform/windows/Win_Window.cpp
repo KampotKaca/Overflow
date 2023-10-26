@@ -95,4 +95,9 @@ namespace overflow
 		glfwPollEvents();
 		glfwSwapBuffers(m_Window);
 	}
+	
+	void Win_Window::Update()
+	{
+		Time::Update_Current(glfwGetTime());
+	}
 }

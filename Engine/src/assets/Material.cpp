@@ -9,11 +9,11 @@ namespace overflow
 	}
 
 	void Material::Postload(UUID shader,
-	                std::vector<MaterialData<float>>& floats,
-					std::vector<MaterialData<vec2>>& vec2s,
-					std::vector<MaterialData<vec3>>& vec3s,
-					std::vector<MaterialData<vec4>>& vec4s,
-					std::vector<MaterialData<UUID>>& textures)
+	                        std::vector<MaterialData<float>>& floats,
+					        std::vector<MaterialData<vec2>>& vec2s,
+					        std::vector<MaterialData<vec3>>& vec3s,
+					        std::vector<MaterialData<vec4>>& vec4s,
+					        std::vector<MaterialData<UUID>>& textures)
 	{
 		m_Shader = AssetPipeline::GetAsset<Shader>(shader);
 		if(m_Shader == nullptr) return;

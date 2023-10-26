@@ -26,7 +26,7 @@ namespace overflow
 
 	void Engine::Update()
 	{
-
+		s_Window->Update();
 	}
 
 	void Engine::Dispose()

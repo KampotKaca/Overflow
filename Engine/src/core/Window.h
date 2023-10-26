@@ -35,8 +35,9 @@ namespace overflow
 		virtual void SetVSync(VSyncMode mode) = 0;
 		virtual VSyncMode GetVSyncMode() = 0;
 
-		[[nodiscard]] virtual bool ShouldClose() const = 0;
-		[[nodiscard]] virtual void* NativePtr()const = 0;
+		[[nodiscard]] virtual bool ShouldClose()const = 0;
+		[[nodiscard]] virtual void* NativePtr() const = 0;
+		virtual void Update() = 0;
 
 		static Window* Create(const WindowProps& props = WindowProps());
 		static void Terminate();

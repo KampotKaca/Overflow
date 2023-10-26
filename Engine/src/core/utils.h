@@ -5,6 +5,7 @@
 #include "log.h"
 #include "uuid.h"
 #include "core.h"
+#include "time.h"
 
 namespace overflow::utils
 {

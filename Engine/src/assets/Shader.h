@@ -12,7 +12,7 @@ namespace overflow
 		Shader(UUID uuid, const std::string& vert, const std::string& frag);
 		~Shader() override { glDeleteProgram(m_ID); }
 
-		uint32_t ShaderID()const { return m_ID; }
+		[[nodiscard]] uint32_t ShaderID()const { return m_ID; }
 		int NameToId(const char *loc);
 
 		//region Uniforms

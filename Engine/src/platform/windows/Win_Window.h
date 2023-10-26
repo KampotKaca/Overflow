@@ -1,5 +1,6 @@
 #ifndef WIN_WINDOW_H
 #define WIN_WINDOW_H
+
 #include "core/utils.h"
 #include "core/Window.h"
 

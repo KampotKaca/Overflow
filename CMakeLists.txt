@@ -64,6 +64,6 @@ set(CMAKE_PCH_INSTANTIATE_TEMPLATES ON)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RES_PATH="${CMAKE_CURRENT_SOURCE_DIR}/Editor/res/") #DEBUG
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    file(COPY ${CMAKE_SOURCE_DIR}/Editor/res DESTINATION ${CMAKE_BINARY_DIR}/res)
-    target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RES_PATH="${CMAKE_CURRENT_SOURCE_DIR}./res/") #BUILD
+    file(COPY ${CMAKE_SOURCE_DIR}/Editor/res DESTINATION ${CMAKE_BINARY_DIR})
+    target_compile_definitions("${CMAKE_PROJECT_NAME}" PUBLIC RES_PATH="${CMAKE_BINARY_DIR}./res/") #BUILD
 endif()

@@ -16,7 +16,7 @@ namespace overflow
 			auto it = s_Assets.find(uuid);
 			if(it == s_Assets.end()) return nullptr;
 
-			return cast(T, ref<Asset>(it->second));
+			return over_cast(T, ref<Asset>(it->second));
 		}
 
 		template<typename T, typename... Args>

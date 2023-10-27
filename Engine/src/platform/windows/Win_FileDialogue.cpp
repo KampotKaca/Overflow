@@ -23,8 +23,7 @@ namespace overflow
 		ofn.nFilterIndex = 1;
 		ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
-		if (GetOpenFileNameA(&ofn) == TRUE)
-			return ofn.lpstrFile;
+		if (GetOpenFileNameA(&ofn) == TRUE) return ofn.lpstrFile;
 
 		return {};
 	}
@@ -48,8 +47,7 @@ namespace overflow
 		// Sets the default extension by extracting it from the filter
 		ofn.lpstrDefExt = strchr(filter, '\0') + 1;
 
-		if (GetSaveFileNameA(&ofn) == TRUE)
-			return ofn.lpstrFile;
+		if (GetSaveFileNameA(&ofn) == TRUE) return ofn.lpstrFile;
 
 		return {};
 	}

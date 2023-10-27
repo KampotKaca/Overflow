@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "Engine.h"
+#include "ecs/Entity.h"
 
 namespace overflow
 {
 	Window* Engine::s_Window = nullptr;
 	bool Engine::s_Running = false;
 	void (*Engine::s_RenderFunc)() = nullptr;
+	ref<SceneRuntime> Engine::m_Runtime = nullptr;
 
 	void Engine::Init(const WindowProps& props)
 	{
@@ -13,6 +15,17 @@ namespace overflow
 		log::Init();
 		s_Window = Window::Create(props);
 		CORE_ASSERT(s_Window, "Unable to create window")
+		m_Runtime = make_ref(SceneRuntime);
+		m_Runtime->Name() = "Runtime";
+		auto entity = m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
+		m_Runtime->CreateEntity();
 	}
 
 	void Engine::Render()

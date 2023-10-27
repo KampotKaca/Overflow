@@ -36,7 +36,7 @@ namespace overflow
 	template<typename T>
 	using ref = std::shared_ptr<T>;
 
-#define cast(x, y) std::dynamic_pointer_cast<x>(y)
+#define over_cast(x, y) std::dynamic_pointer_cast<x>(y)
 #define make_ref(x, ...) std::make_shared<x>(__VA_ARGS__)
 #define make_scope(x, ...) std::make_unique<x>(__VA_ARGS__)
 

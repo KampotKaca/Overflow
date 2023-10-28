@@ -8,6 +8,7 @@
 #include "overflow.h"
 #include "EditorWindowManager.h"
 
+#include "windows/MenubarWindow.h"
 #include "windows/HierarchyWindow.h"
 #include "windows/InspectorWindow.h"
 #include "windows/SceneWindow.h"
@@ -15,6 +16,8 @@
 
 namespace overflow::edit
 {
+	ref<EditorCamera> Editor::m_Camera = nullptr;
+	
 	void Editor::Init()
 	{
 		WindowProps props = WindowProps();
@@ -30,7 +33,10 @@ namespace overflow::edit
 		Engine::SetRenderFuncPtr(RenderImGui);
 
 		InitImGui("fonts/noto_sans/Bold.ttf", "fonts/noto_sans/Medium.ttf");
-
+		
+		m_Camera = make_ref(EditorCamera);
+		
+		EditorWindowManager::Create<MenubarWindow>("Menubar");
 		EditorWindowManager::Create<HierarchyWindow>("Hierarchy");
 		EditorWindowManager::Create<InspectorWindow>("Inspector");
 		EditorWindowManager::Create<SceneWindow>("Scene");
@@ -178,39 +184,8 @@ namespace overflow::edit
 		Begin();
 
 		ImGui::DockSpaceOverViewport(nullptr);
-		DrawMenubar();
 		EditorWindowManager::DrawAll();
 
 		End();
-	}
-
-	void Editor::DrawMenubar()
-	{
-		if(ImGui::BeginMainMenuBar())
-		{
-			if(ImGui::BeginMenu("File"))
-			{
-				if(ImGui::MenuItem("Save", "Ctrl+S"))
-				{
-
-				}
-				ImGui::EndMenu();
-			}
-
-			if(ImGui::BeginMenu("Windows"))
-			{
-				for (auto& window : EditorWindowManager::s_Windows)
-				{
-					if(!window.second->IsOpen() && ImGui::MenuItem(window.second->Name()))
-					{
-						window.second->Open(true);
-					}
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMainMenuBar();
-		}
 	}
 }

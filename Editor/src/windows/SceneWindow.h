@@ -2,6 +2,8 @@
 #define SCENE_WINDOW_H
 
 #include "EditorWindow.h"
+#include "rendering/FrameBuffer.h"
+#include "EditorCamera.h"
 
 namespace overflow::edit
 {
@@ -13,8 +15,12 @@ namespace overflow::edit
 
 		const char *Name() override { return "Scene"; }
 		void Awake() override;
-
-	protected:
+		
+	private:
+		ref<FrameBuffer> m_Buffer = nullptr;
+		ref<EditorCamera> m_Camera = nullptr;
+		ImVec2 m_Size = { 512, 512 };
+		
 		void Draw() override;
 	};
 }

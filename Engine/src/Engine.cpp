@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Engine.h"
+#include "rendering/Renderer.h"
 #include "ecs/Entity.h"
 
 namespace overflow
@@ -26,6 +27,8 @@ namespace overflow
 		m_Runtime->CreateEntity();
 		m_Runtime->CreateEntity();
 		m_Runtime->CreateEntity();
+		
+		Renderer::RunThread();
 	}
 
 	void Engine::Render()

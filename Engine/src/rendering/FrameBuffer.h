@@ -29,6 +29,7 @@ namespace overflow
 
     struct FBSpecification
     {
+		static FBSpecification Default();
         uint32_t Width = 0, Height = 0;
         FBAttachmentSpecification Attachments;
         uint32_t Samples = 1;

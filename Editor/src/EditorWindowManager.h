@@ -20,11 +20,15 @@ namespace overflow::edit
 			window->Awake();
 			return window;
 		}
+		
+		static bool IsEveryWindowOpen()
+		{ return std::all_of(s_Windows.begin(), s_Windows.end(), [](auto& win){ return win.second->IsOpen(); }); }
 
 	private:
 		static std::unordered_map<std::string, ref<EditorWindow>> s_Windows;
 
 		friend class Editor;
+		friend class MenubarWindow;
 	};
 }
 

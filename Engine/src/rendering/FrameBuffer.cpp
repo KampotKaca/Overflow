@@ -216,4 +216,15 @@ namespace overflow
 		glClearTexImage(m_ColorAttachments[id], 0,
 		                utils::TexFormatToGL(spec.TextureFormat), GL_INT, &value);
 	}
+	
+	FBSpecification FBSpecification::Default()
+	{
+		FBSpecification fbSpec;
+		fbSpec.Attachments = { FBTexSpecification(FBTexFormat::RGBA8),
+		                       FBTexSpecification(FBTexFormat::RED_INTEGER),
+		                       FBTexSpecification(FBTexFormat::Depth) };
+		fbSpec.Width = 1280;
+		fbSpec.Height = 720;
+		return fbSpec;
+	}
 }

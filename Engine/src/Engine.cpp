@@ -19,14 +19,7 @@ namespace overflow
 		m_Runtime = make_ref(SceneRuntime);
 		m_Runtime->Name() = "Runtime";
 		auto entity = m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
-		m_Runtime->CreateEntity();
+		entity.AddComponent<Render3D>();
 		
 		Renderer::RunThread();
 	}

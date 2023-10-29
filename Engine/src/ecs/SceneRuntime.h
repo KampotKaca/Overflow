@@ -16,6 +16,7 @@ namespace overflow
 		std::string& Name() { return m_Name; }
 		char* Label() { return &m_Name[0]; }
 
+		void SubmitForRendering(bool localCamera = false);
 		entt::registry& GetRegistry() { return m_Registry; }
 
 	private:

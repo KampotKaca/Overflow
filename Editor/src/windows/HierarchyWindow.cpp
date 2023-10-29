@@ -21,6 +21,7 @@ namespace overflow::edit
 					auto entity = Entity{ id, runtime.get() };
 					if(ImGui::Selectable(entity.Label(), false))
 					{
+
 					}
 				});
 			}

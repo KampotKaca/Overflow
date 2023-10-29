@@ -48,7 +48,7 @@ namespace overflow
 		UUID UUID()
 		{ return GetComponent<IDComponent>(); }
 
-		bool IsValid() const { return m_Scene->m_Registry.valid(m_Entity); }
+		[[nodiscard]] bool IsValid() const { return m_Scene->m_Registry.valid(m_Entity); }
 
 		operator entt::entity() const { return m_Entity; }
 

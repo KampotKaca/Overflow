@@ -3,6 +3,8 @@
 
 #include <utility>
 #include "core/utils.h"
+#include "assets/Material.h"
+#include "rendering/RenderStructure.h"
 
 namespace overflow
 {
@@ -40,6 +42,25 @@ namespace overflow
 			 Scale = { 1, 1, 1 };
 	};
 
+	struct Render2D
+	{
+		Render2D() = default;
+		Render2D(Render2D&) = default;
+		~Render2D() = default;
+
+		ref<Material> Material;
+		bool CastShadows = true;
+	};
+
+	struct Render3D
+	{
+		Render3D() = default;
+		Render3D(Render3D&) = default;
+		~Render3D() = default;
+
+		ref<Material> Material;
+		bool CastShadows = true;
+	};
 }
 
 #endif //COMPONENTS_H

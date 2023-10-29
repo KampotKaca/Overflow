@@ -11,3 +11,6 @@
 [submodule "Editor/include/yaml-cpp"]
 	path = Editor/include/yaml-cpp
 	url = https://github.com/KampotKaca/yaml-cpp.git
+[submodule "Engine/include/assimp"]
+	path = Engine/include/assimp
+	url = https://github.com/assimp/assimp.git

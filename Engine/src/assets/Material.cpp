@@ -3,27 +3,126 @@
 
 namespace overflow
 {
-	Material::Material(UUID uuid) : Asset(uuid)
+	Material::Material(UUID uuid, Shader* shader)
+	: m_UUID(uuid)
 	{
-
+		SetShader(shader);
 	}
 
-	void Material::Postload(UUID shader,
-	                        std::vector<MaterialData<float>>& floats,
-					        std::vector<MaterialData<vec2>>& vec2s,
-					        std::vector<MaterialData<vec3>>& vec3s,
-					        std::vector<MaterialData<vec4>>& vec4s,
-					        std::vector<MaterialData<UUID>>& textures)
+	void Material::SetShader(Shader *shader)
 	{
-		m_Shader = AssetPipeline::GetAsset<Shader>(shader);
-		if(m_Shader == nullptr) return;
+		if(shader == m_Shader) return;
 
-		for (auto& var : floats) m_Floats[var.id] = var.data;
-		for (auto& var : vec2s) m_Vec2s[var.id] = var.data;
-		for (auto& var : vec3s) m_Vec3s[var.id] = var.data;
-		for (auto& var : vec4s) m_Vec4s[var.id] = var.data;
+		m_Floats.clear();
+		m_Vec2s .clear();
+		m_Vec3s .clear();
+		m_Vec4s .clear();
+		m_Tex2Ds.clear();
 
-		for (auto& var : textures)
-			m_Tex2Ds[var.id] = AssetPipeline::GetAsset<Tex2D>(var.data);
+		if(shader == nullptr)
+		{
+			m_Shader = nullptr;
+			return;
+		}
+
+		for(auto& uniform : shader->m_UniformData)
+		{
+			auto id = m_Shader->NameToId(uniform.Name.c_str());
+			switch (uniform.Type)
+			{
+				case GL_FLOAT:      m_Floats[id] = 0;          break;
+				case GL_FLOAT_VEC2: m_Vec2s [id] = vec2();     break;
+				case GL_FLOAT_VEC3: m_Vec3s [id] = vec3();     break;
+				case GL_FLOAT_VEC4: m_Vec4s [id] = vec4();     break;
+				case GL_SAMPLER_2D: m_Tex2Ds[id] = nullptr;    break;
+			}
+		}
 	}
+
+	//region Uniforms
+	void Material::SetFloat(const char *key, float v)
+	{
+		if(m_Shader == nullptr)
+		{
+			CORE_ERROR("[MATERIAL] cannot set uniform when shader is not specified!!!");
+			return;
+		}
+
+		auto it = m_Floats.find(m_Shader->NameToId(key));
+		if(it == m_Floats.end())
+		{
+			CORE_ERROR("[MATERIAL] invalid uniform name or type");
+			return;
+		}
+		it->second = v;
+	}
+
+	void Material::SetFloat(const char *key, const vec2 &v)
+	{
+		if(m_Shader == nullptr)
+		{
+			CORE_ERROR("[MATERIAL] cannot set uniform when shader is not specified!!!");
+			return;
+		}
+
+		auto it = m_Vec2s.find(m_Shader->NameToId(key));
+		if(it == m_Vec2s.end())
+		{
+			CORE_ERROR("[MATERIAL] invalid uniform name or type");
+			return;
+		}
+		it->second = v;
+	}
+
+	void Material::SetFloat(const char *key, const vec3 &v)
+	{
+		if(m_Shader == nullptr)
+		{
+			CORE_ERROR("[MATERIAL] cannot set uniform when shader is not specified!!!");
+			return;
+		}
+
+		auto it = m_Vec3s.find(m_Shader->NameToId(key));
+		if(it == m_Vec3s.end())
+		{
+			CORE_ERROR("[MATERIAL] invalid uniform name or type");
+			return;
+		}
+		it->second = v;
+	}
+
+	void Material::SetFloat(const char *key, const vec4 &v)
+	{
+		if(m_Shader == nullptr)
+		{
+			CORE_ERROR("[MATERIAL] cannot set uniform when shader is not specified!!!");
+			return;
+		}
+
+		auto it = m_Vec4s.find(m_Shader->NameToId(key));
+		if(it == m_Vec4s.end())
+		{
+			CORE_ERROR("[MATERIAL] invalid uniform name or type");
+			return;
+		}
+		it->second = v;
+	}
+
+	void Material::SetTex(const char *key, Tex2D* v)
+	{
+		if(m_Shader == nullptr)
+		{
+			CORE_ERROR("[MATERIAL] cannot set uniform when shader is not specified!!!");
+			return;
+		}
+
+		auto it = m_Tex2Ds.find(m_Shader->NameToId(key));
+		if(it == m_Tex2Ds.end())
+		{
+			CORE_ERROR("[MATERIAL] invalid uniform name or type");
+			return;
+		}
+		it->second = v;
+	}
+	//endregion
 }

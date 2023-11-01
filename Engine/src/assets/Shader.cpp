@@ -3,6 +3,8 @@
 
 namespace overflow
 {
+	static char NAME_BUFFER[64];
+
 	static uint32_t CreateShader(GLenum shader, const std::string& source)
 	{
 		uint32_t sh = glCreateShader(shader);
@@ -29,8 +31,8 @@ namespace overflow
 		return sh;
 	}
 
-	Shader::Shader(UUID uuid, const std::string &vert, const std::string &frag)
-		: Asset(uuid)
+	Shader::Shader(UUID uuid, const std::string& vert, const std::string& frag)
+		: m_UUID(uuid)
 	{
 		uint32_t vShader = CreateShader(GL_VERTEX_SHADER, vert),
 				fShader = CreateShader(GL_FRAGMENT_SHADER, frag);
@@ -52,6 +54,21 @@ namespace overflow
 
 			glDeleteProgram(m_ID);
 			CORE_ASSERT(false, "[PROGRAM] link failure with gl message: {0}", message)
+		}
+
+		int numActiveUniforms;
+		glGetProgramiv(m_ID, GL_ACTIVE_UNIFORMS, &numActiveUniforms);
+
+		for (int i = 0; i < numActiveUniforms; ++i)
+		{
+			GLsizei bufSize = 64;
+			GLsizei length;
+			GLint size;
+			GLenum type;
+			std::string uniformName;
+
+			glGetActiveUniform(m_ID, i, bufSize, &length, &size, &type, NAME_BUFFER);
+			m_UniformData.push_back({NAME_BUFFER, type, size });
 		}
 
 		glDetachShader(m_ID, vShader);

@@ -4,6 +4,13 @@
 
 namespace overflow
 {
+	VBO::VBO()
+	{
+		glCreateBuffers(1, &m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_DYNAMIC_DRAW);
+	}
+
 	VBO::VBO(uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
@@ -11,7 +18,7 @@ namespace overflow
 		glBufferData(GL_ARRAY_BUFFER, size, nullptr, GL_DYNAMIC_DRAW);
 	}
 
-	VBO::VBO(float *vertices, uint32_t size)
+	VBO::VBO(void *vertices, uint32_t size)
 	{
 		glCreateBuffers(1, &m_RendererID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
@@ -26,6 +33,13 @@ namespace overflow
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, size, data);
+	}
+
+	EBO::EBO() : m_Size(0)
+	{
+		glCreateBuffers(1, &m_RendererID);
+		glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+		glBufferData(GL_ARRAY_BUFFER, 0, nullptr, GL_STATIC_DRAW);
 	}
 
 	EBO::EBO(uint32_t *indices, uint32_t size) : m_Size(size)

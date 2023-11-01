@@ -110,8 +110,9 @@ namespace overflow
 	class VBO
 	{
 	public:
+		VBO();
 		VBO(uint32_t size);
-		VBO(float* vertices, uint32_t size);
+		VBO(void* vertices, uint32_t size);
 		~VBO();
 
 		void Bind() const;
@@ -130,6 +131,7 @@ namespace overflow
 	class EBO
 	{
 	public:
+		EBO();
 		EBO(uint32_t* indices, uint32_t size);
 		~EBO();
 

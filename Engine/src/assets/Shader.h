@@ -1,16 +1,24 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "Asset.h"
 #include "Tex2D.h"
+#include "core/utils.h"
 
 namespace overflow
 {
-	class Shader : public Asset
+	struct UniformData
+	{
+		std::string Name;
+		GLenum Type;
+		int Size;
+	};
+
+	class Shader
 	{
 	public:
+		Shader() = default;
 		Shader(UUID uuid, const std::string& vert, const std::string& frag);
-		~Shader() override { glDeleteProgram(m_ID); }
+		~Shader() { glDeleteProgram(m_ID); }
 
 		[[nodiscard]] uint32_t ShaderID()const { return m_ID; }
 		int NameToId(const char *loc);
@@ -66,10 +74,12 @@ namespace overflow
 		//endregion
 
 	private:
+		UUID m_UUID;
 		uint32_t m_ID = 0;
 		std::unordered_map<std::string, int32_t> m_Locations;
+		std::vector<UniformData> m_UniformData;
 
-		void OnReload() override { glDeleteProgram(m_ID); }
+		friend class Material;
 	};
 }
 

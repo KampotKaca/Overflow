@@ -1,17 +1,18 @@
 #ifndef TEX2D_H
 #define TEX2D_H
 
-#include "Asset.h"
+#include "core/utils.h"
 
 namespace overflow
 {
-	class Tex2D : public Asset
+	class Tex2D
 	{
 	public:
+		Tex2D() = default;
 		Tex2D(UUID uuid, byte* data, vec2i size,
 			  int numColCh, int filter = GL_LINEAR,
 			  int wrap = GL_REPEAT, bool mipmaps = true);
-		~Tex2D() override { glDeleteTextures(1, &m_TexID); }
+		~Tex2D() { glDeleteTextures(1, &m_TexID); }
 
 		void Bind(int texUnit) const
 		{
@@ -28,12 +29,11 @@ namespace overflow
 		[[nodiscard]] bool MipMaps() const { return m_MipMaps; }
 
 	private:
+		UUID m_UUID;
 		uint32_t m_TexID = 0;
 		vec2i m_Size = vec2i();
 		int m_NumColCh = 0, m_Filter = GL_LINEAR, m_Wrap = GL_REPEAT;
 		bool m_MipMaps = true;
-
-		void OnReload() override { glDeleteTextures(1, &m_TexID); }
 	};
 }
 

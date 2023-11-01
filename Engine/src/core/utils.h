@@ -30,6 +30,15 @@ namespace overflow::utils
 
 namespace overflow
 {
+	enum class AssetType
+	{
+		Shader,
+		Tex2D,
+		Mesh,
+		Material,
+		Scene
+	};
+
 	template<typename T>
 	using scope = std::unique_ptr<T>;
 

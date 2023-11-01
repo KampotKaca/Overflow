@@ -5,7 +5,7 @@ namespace overflow
 {
 	Tex2D::Tex2D(UUID uuid, byte *data, vec2i size,
 				 int numColCh, int filter, int wrap, bool mipmaps)
-				 : Asset(uuid), m_Size(size), m_NumColCh(numColCh),
+				 : m_UUID(uuid), m_Size(size), m_NumColCh(numColCh),
 				 m_Filter(filter), m_Wrap(wrap), m_MipMaps(mipmaps)
 	{
 		glGenTextures(1, &m_TexID);

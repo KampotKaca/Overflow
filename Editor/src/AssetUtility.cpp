@@ -13,6 +13,27 @@ namespace overflow::edit::utils
 		{ "Scene",    AssetType::Scene }
 	};
 
+	void LoadEditorAssets()
+	{
+		LoadAssetsByExtension(RES_PATH, RES_PATH, ".ovf0");
+		LoadAssetsByExtension(RES_PATH, RES_PATH, ".ovf10");
+		LoadAssetsByExtension(RES_PATH, RES_PATH, ".ovf100");
+	}
+
+	void LoadAssetsByExtension(const std::filesystem::path &root, const std::filesystem::path &loc, const std::string& ext)
+	{
+		for (const auto& entry : std::filesystem::directory_iterator(loc))
+		{
+			if(std::filesystem::is_directory(entry))
+			{
+				LoadAssetsByExtension(root, entry.path(), ext);
+				continue;
+			}
+
+			if (entry.path().extension() == ext) LoadAsset(root, entry.path());
+		}
+	}
+
 	void* LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload)
 	{
 		if(!std::filesystem::exists(location))
@@ -186,12 +207,12 @@ namespace overflow::edit::utils
 		auto* shader = AssetPipeline::GetShader((UUID)shaderId);
 		auto* mat = AssetPipeline::CreateMaterial(uuid, shader, true);
 
-		MATERIAL_MAP(float, "Floats", mat->SetFloat, GetFloat)
-		MATERIAL_MAP(vec2,  "Vec2s",  mat->SetFloat, GetVec2)
-		MATERIAL_MAP(vec3,  "Vec3s",  mat->SetFloat, GetVec3)
-		MATERIAL_MAP(vec4,  "Vec4s",  mat->SetFloat, GetVec4)
+		MATERIAL_MAP(float, "floats", mat->SetFloat, GetFloat)
+		MATERIAL_MAP(vec2,  "vec2s",  mat->SetFloat, GetVec2)
+		MATERIAL_MAP(vec3,  "vec3s",  mat->SetFloat, GetVec3)
+		MATERIAL_MAP(vec4,  "vec4s",  mat->SetFloat, GetVec4)
 
-		if (doc.PushArray("Vec4s"))
+		if (doc.PushArray("tex2Ds"))
 		{
 			for (size_t i = 0; i < doc.size(); i++) {
 				doc.SetByIndex(i);

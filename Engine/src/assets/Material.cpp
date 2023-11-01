@@ -25,16 +25,18 @@ namespace overflow
 			return;
 		}
 
-		for(auto& uniform : shader->m_UniformData)
+		m_Shader = shader;
+
+		for(auto& uniform : m_Shader->m_UniformData)
 		{
 			auto id = m_Shader->NameToId(uniform.Name.c_str());
 			switch (uniform.Type)
 			{
-				case GL_FLOAT:      m_Floats[id] = 0;          break;
-				case GL_FLOAT_VEC2: m_Vec2s [id] = vec2();     break;
-				case GL_FLOAT_VEC3: m_Vec3s [id] = vec3();     break;
-				case GL_FLOAT_VEC4: m_Vec4s [id] = vec4();     break;
-				case GL_SAMPLER_2D: m_Tex2Ds[id] = nullptr;    break;
+				case GL_FLOAT:      m_Floats[id] = 0;        break;
+				case GL_FLOAT_VEC2: m_Vec2s [id] = vec2();   break;
+				case GL_FLOAT_VEC3: m_Vec3s [id] = vec3();   break;
+				case GL_FLOAT_VEC4: m_Vec4s [id] = vec4();   break;
+				case GL_SAMPLER_2D: m_Tex2Ds[id] = nullptr;  break;
 			}
 		}
 	}

@@ -16,7 +16,7 @@ namespace overflow::edit
 		{
 			if(ImGui::CollapsingHeader(runtime->Label()))
 			{
-				runtime->GetRegistry().each([&](auto id)
+				runtime->GetRegistry().each([&](entt::entity id)
 				{
 					auto entity = Entity{ id, runtime.get() };
 					if(ImGui::Selectable(entity.Label(), false))

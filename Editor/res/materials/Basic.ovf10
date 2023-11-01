@@ -1,0 +1,9 @@
+__type: Material
+__uuid: 6178351467307147831
+shader: 782349871293564821
+vec4s:
+  - name: u_Albedo
+    var: [1, 1, 1, 1]
+tex2Ds:
+  - name: u_MainTex
+    var: 13182159457962553423

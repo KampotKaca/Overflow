@@ -115,6 +115,8 @@ namespace overflow
 
 		glGenFramebuffers(1, &m_RendererID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
+		glClearColor(0.1f, 0.1f, 0.1f, 1);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		bool multisample = m_Spec.Samples > 1;
 
@@ -172,7 +174,7 @@ namespace overflow
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void FrameBuffer::Bind()
+	void FrameBuffer::Bind() const
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glViewport(0, 0, (int32_t)m_Spec.Width, (int32_t)m_Spec.Height);

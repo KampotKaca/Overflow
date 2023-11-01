@@ -14,6 +14,8 @@
 #include "windows/SceneWindow.h"
 #include "windows/ProjectWindow.h"
 
+#include "AssetUtility.h"
+
 namespace overflow::edit
 {
 	ref<EditorCamera> Editor::m_Camera = nullptr;
@@ -31,6 +33,8 @@ namespace overflow::edit
 
 		Engine::Init(props);
 		Engine::SetRenderFuncPtr(RenderImGui);
+
+		utils::LoadEditorAssets();
 
 		InitImGui("fonts/noto_sans/Bold.ttf", "fonts/noto_sans/Medium.ttf");
 		

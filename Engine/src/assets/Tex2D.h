@@ -20,6 +20,7 @@ namespace overflow
 			glBindTexture(GL_TEXTURE_2D, m_TexID);
 		}
 
+		[[nodiscard]] UUID GetUUID()const { return m_UUID; }
 		[[nodiscard]] vec2i Size()const { return m_Size; }
 		[[nodiscard]] int NumChannels()const { return m_NumColCh; }
 		[[nodiscard]] uint32_t TexID()const { return m_TexID; }

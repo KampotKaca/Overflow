@@ -68,7 +68,15 @@ namespace overflow
 			std::string uniformName;
 
 			glGetActiveUniform(m_ID, i, bufSize, &length, &size, &type, NAME_BUFFER);
-			m_UniformData.push_back({NAME_BUFFER, type, size });
+
+			if(size > 1) continue;
+
+			GLint blockIndex;
+			uint32_t t = i;
+			glGetActiveUniformsiv(m_ID, 1, &t, GL_UNIFORM_BLOCK_INDEX, &blockIndex);
+
+			if(blockIndex == -1)
+				m_UniformData.push_back({NAME_BUFFER, type, size });
 		}
 
 		glDetachShader(m_ID, vShader);

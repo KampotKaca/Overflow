@@ -1,0 +1,4 @@
+__type: Shader
+__uuid: 672304754
+vPath: shaders/Basic.vert
+fPath: shaders/Invalid.frag

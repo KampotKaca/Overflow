@@ -45,8 +45,8 @@ namespace overflow
 
 	    void Invalidate();
 
-	    void Bind();
-	    void UnBind();
+	    void Bind() const;
+	    static void UnBind();
 	    void Resize(uint32_t width, uint32_t height);
 	    int ReadPixel(uint32_t id, uint32_t x, uint32_t y);
 	    void ClearAttachment(uint32_t id, uint32_t value);

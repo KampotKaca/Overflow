@@ -35,8 +35,7 @@ namespace overflow
 		Shader,
 		Tex2D,
 		Mesh,
-		Material,
-		Scene
+		Material
 	};
 
 	template<typename T>

@@ -1,17 +1,17 @@
 #include "pch.h"
-#include "SceneRuntime.h"
+#include "Scene.h"
 #include "Components.h"
 #include "Entity.h"
 #include "rendering/Renderer.h"
 
 namespace overflow
 {
-	SceneRuntime::SceneRuntime()
+	Scene::Scene()
 	{
 
 	}
 
-	Entity SceneRuntime::CreateEntity()
+	Entity Scene::CreateEntity()
 	{
 		auto entity = Entity(m_Registry.create(), this);
 		entity.AddComponent<IDComponent>();
@@ -19,7 +19,7 @@ namespace overflow
 		return entity;
 	}
 
-	void SceneRuntime::SubmitForRendering(bool localCamera)
+	void Scene::SubmitForRendering(bool localCamera)
 	{
 		auto view3d = m_Registry.view<Transform, Render3D>();
 		for (auto& entity : view3d)

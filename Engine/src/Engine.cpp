@@ -8,7 +8,7 @@ namespace overflow
 	Window* Engine::s_Window = nullptr;
 	bool Engine::s_Running = false;
 	void (*Engine::s_RenderFunc)() = nullptr;
-	ref<SceneRuntime> Engine::m_Runtime = nullptr;
+	ref<Scene> Engine::m_Runtime = nullptr;
 
 	void Engine::Init(const WindowProps& props)
 	{
@@ -16,11 +16,19 @@ namespace overflow
 		log::Init();
 		s_Window = Window::Create(props);
 		CORE_ASSERT(s_Window, "Unable to create window")
-		m_Runtime = make_ref(SceneRuntime);
+		m_Runtime = make_ref(Scene);
 		m_Runtime->Name() = "Runtime";
 		auto entity = m_Runtime->CreateEntity();
 		entity.AddComponent<Render3D>();
-		
+
+		auto entity2 = m_Runtime->CreateEntity();
+		auto entity3 = m_Runtime->CreateEntity();
+		auto entity4 = m_Runtime->CreateEntity();
+		auto entity5 = m_Runtime->CreateEntity();
+
+		entity2.SetParent(entity);
+		entity3.SetParent(entity);
+
 		Renderer::RunThread();
 	}
 

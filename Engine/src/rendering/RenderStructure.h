@@ -16,7 +16,7 @@ namespace overflow
 	struct Render_Object
 	{
 		mat4 Transformation;
-		ref<Material> Material;
+		Material* Material;
 		bool CastShadows;
 	};
 	

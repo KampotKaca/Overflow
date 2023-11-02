@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "SceneRuntime.h"
+#include "Scene.h"
 #include "Components.h"
 #include "entt.hpp"
 
@@ -10,7 +10,7 @@ namespace overflow
 	class Entity
 	{
 	public:
-		Entity(entt::entity entity, SceneRuntime* scene);
+		Entity(entt::entity entity, Scene* scene);
 		~Entity() = default;
 
 		template<typename T, typename... Args>
@@ -36,25 +36,21 @@ namespace overflow
 		{ return m_Scene->m_Registry.get<T>(m_Entity); }
 
 		template<typename T>
-		bool HasComponent()
-		{ return m_Scene->m_Registry.any_of<T>(m_Entity); }
+		bool HasComponent() { return m_Scene->m_Registry.any_of<T>(m_Entity); }
+		std::string& Name() { return GetComponent<IDComponent>().Name; }
+		char* Label() { return &GetComponent<IDComponent>().Name[0]; }
 
-		std::string& Name()
-		{ return GetComponent<IDComponent>().Name; }
-
-		char* Label()
-		{ return &GetComponent<IDComponent>().Name[0]; }
-
-		UUID UUID()
-		{ return GetComponent<IDComponent>(); }
-
+		bool HasParent() { return m_Scene->m_Registry.valid(GetComponent<Transform>().Parent); };
+		UUID UUID() { return GetComponent<IDComponent>(); }
 		[[nodiscard]] bool IsValid() const { return m_Scene->m_Registry.valid(m_Entity); }
 
 		operator entt::entity() const { return m_Entity; }
 
+		void SetParent(entt::entity entity);
+
 	private:
 		entt::entity m_Entity;
-		SceneRuntime* m_Scene;
+		Scene* m_Scene;
 	};
 }
 

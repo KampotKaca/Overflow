@@ -2,7 +2,7 @@
 #define ENGINE_H
 
 #include "core/Window.h"
-#include "ecs/SceneRuntime.h"
+#include "ecs/Scene.h"
 
 namespace overflow
 {
@@ -20,13 +20,13 @@ namespace overflow
 
 		static void SetRenderFuncPtr(void (*renderFunc)());
 		static Window* GetWindow() { return s_Window; }
-		static ref<SceneRuntime> GetRuntime() { return m_Runtime; }
+		static ref<Scene> GetRuntime() { return m_Runtime; }
 
 	private:
 		static Window* s_Window;
 		static bool s_Running;
 		static void (*s_RenderFunc)();
-		static ref<SceneRuntime> m_Runtime;
+		static ref<Scene> m_Runtime;
 	};
 }
 

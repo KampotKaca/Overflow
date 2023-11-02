@@ -3,6 +3,7 @@
 
 #include <utility>
 #include "core/utils.h"
+#include "assets/Mesh.h"
 #include "assets/Material.h"
 #include "rendering/RenderStructure.h"
 
@@ -40,6 +41,17 @@ namespace overflow
 		vec3 Position = { 0, 0, 0 },
 			 Rotation = { 0, 0, 0 },
 			 Scale = { 1, 1, 1 };
+
+		entt::entity Parent = entt::null;
+	};
+
+	struct ChildComponent
+	{
+		ChildComponent() = default;
+		ChildComponent(ChildComponent&) = default;
+		~ChildComponent() = default;
+
+		std::vector<entt::entity> Children;
 	};
 
 	struct Render2D
@@ -48,7 +60,10 @@ namespace overflow
 		Render2D(Render2D&) = default;
 		~Render2D() = default;
 
-		ref<Material> Material;
+
+		vec4 Color = vec4(1);
+		Tex2D* Texture = nullptr;
+		Material* Material = nullptr;
 		bool CastShadows = true;
 	};
 
@@ -58,7 +73,8 @@ namespace overflow
 		Render3D(Render3D&) = default;
 		~Render3D() = default;
 
-		ref<Material> Material;
+		Mesh* Mesh = nullptr;
+		Material* Material = nullptr;
 		bool CastShadows = true;
 	};
 }

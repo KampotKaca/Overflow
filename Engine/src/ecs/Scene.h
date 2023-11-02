@@ -6,11 +6,11 @@
 namespace overflow
 {
 	class Entity;
-	class SceneRuntime
+	class Scene
 	{
 	public:
-		SceneRuntime();
-		~SceneRuntime() = default;
+		Scene();
+		~Scene() = default;
 
 		Entity CreateEntity();
 		std::string& Name() { return m_Name; }

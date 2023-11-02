@@ -4,6 +4,14 @@
 
 namespace overflow::edit
 {
+	static void DrawEntity(Entity entity)
+	{
+		if(ImGui::Selectable(entity.Label(), false))
+		{
+
+		}
+	}
+
 	void HierarchyWindow::Awake()
 	{
 	}
@@ -19,10 +27,7 @@ namespace overflow::edit
 				runtime->GetRegistry().each([&](entt::entity id)
 				{
 					auto entity = Entity{ id, runtime.get() };
-					if(ImGui::Selectable(entity.Label(), false))
-					{
-
-					}
+					if(!entity.HasParent()) DrawEntity(entity);
 				});
 			}
 

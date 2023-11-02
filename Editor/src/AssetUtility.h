@@ -13,7 +13,8 @@ namespace overflow::edit::utils
 	void* LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
 	void* LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
 	void* LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
-	void* LoadScene(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
+
+	void* LoadScene(const std::filesystem::path &location);
 }
 
 #endif //ASSET_UTILITY_H

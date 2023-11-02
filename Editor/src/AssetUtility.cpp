@@ -6,18 +6,17 @@ namespace overflow::edit::utils
 {
 	const std::unordered_map<std::string, AssetType> s_Types =
 	{
-		{ "Shader",   AssetType::Shader },
-		{ "Tex2D",    AssetType::Tex2D },
-		{ "Mesh",     AssetType::Mesh },
-		{ "Material", AssetType::Material },
-		{ "Scene",    AssetType::Scene }
+		{ ".sha",   AssetType::Shader },
+		{ ".tex",   AssetType::Tex2D },
+		{ ".mesh",  AssetType::Mesh },
+		{ ".mat",   AssetType::Material },
 	};
 
 	void LoadEditorAssets()
 	{
-		LoadAssetsByExtension(RES_PATH, RES_PATH, ".ovf0");
-		LoadAssetsByExtension(RES_PATH, RES_PATH, ".ovf10");
-		LoadAssetsByExtension(RES_PATH, RES_PATH, ".ovf100");
+		LoadAssetsByExtension(RES_PATH, RES_PATH, ".sha");
+		LoadAssetsByExtension(RES_PATH, RES_PATH, ".tex");
+		LoadAssetsByExtension(RES_PATH, RES_PATH, ".mat");
 	}
 
 	void LoadAssetsByExtension(const std::filesystem::path &root, const std::filesystem::path &loc, const std::string& ext)
@@ -42,26 +41,19 @@ namespace overflow::edit::utils
 			return nullptr;
 		}
 
+		auto it = s_Types.find(location.extension().string());
+		if(it == s_Types.end())
+		{
+			CORE_ERROR("Invalid Asset Type!!!");
+			return nullptr;
+		}
+
 		Deserializer doc(location);
 		uint64_t uuid;
 		doc.GetUInt64("__uuid", uuid, UUID());
 		void* existent = AssetPipeline::Find((UUID)uuid);
 
 		if(!(existent == nullptr || reload)) return existent;
-
-		std::string tString;
-		if(!doc.GetString("__type", tString))
-		{
-			CORE_ERROR("Invalid Asset Type!!!");
-			return nullptr;
-		}
-
-		auto it = s_Types.find(tString);
-		if(it == s_Types.end())
-		{
-			CORE_ERROR("Invalid Asset Type!!!");
-			return nullptr;
-		}
 
 		AssetType type = it->second;
 		switch (type)
@@ -70,7 +62,6 @@ namespace overflow::edit::utils
 			case AssetType::Tex2D:      return LoadTex2D(root, doc, (UUID)uuid);
 			case AssetType::Mesh:       return LoadMesh(root, doc, (UUID)uuid);
 			case AssetType::Material:   return LoadMaterial(root, doc, (UUID)uuid);
-			case AssetType::Scene:      return LoadScene(root, doc, (UUID)uuid);
 		}
 	}
 
@@ -232,7 +223,7 @@ namespace overflow::edit::utils
 
 #undef MATERIAL_MAP
 
-	void* LoadScene(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	void* LoadScene(const std::filesystem::path &location)
 	{
 		return nullptr;
 	}

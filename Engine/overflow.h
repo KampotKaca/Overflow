@@ -14,4 +14,7 @@
 #include "assets/Material.h"
 #include "assets/Mesh.h"
 
+#include "ecs/Scene.h"
+#include "ecs/Entity.h"
+
 #endif //OVERFLOW_H

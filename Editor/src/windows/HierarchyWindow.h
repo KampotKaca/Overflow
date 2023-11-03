@@ -12,12 +12,11 @@ namespace overflow::edit
 		~HierarchyWindow() override = default;
 
 		void Awake() override;
+		static Entity GetSelection();
 
 	protected:
 		void Draw() override;
 		const char* Name() override { return "Hierarchy"; }
-
-	private:
 	};
 }
 

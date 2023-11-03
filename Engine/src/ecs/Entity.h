@@ -42,9 +42,11 @@ namespace overflow
 
 		bool HasParent() { return m_Scene->m_Registry.valid(GetComponent<Transform>().Parent); };
 		UUID UUID() { return GetComponent<IDComponent>(); }
-		[[nodiscard]] bool IsValid() const { return m_Scene->m_Registry.valid(m_Entity); }
+		[[nodiscard]] bool IsValid() const
+		{ return m_Entity != entt::null && m_Scene != nullptr && m_Scene->m_Registry.valid(m_Entity); }
 
 		operator entt::entity() const { return m_Entity; }
+		[[nodiscard]] Scene* GetScene() const { return m_Scene; }
 
 		void SetParent(entt::entity entity);
 

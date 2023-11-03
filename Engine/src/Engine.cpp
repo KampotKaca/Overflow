@@ -19,12 +19,17 @@ namespace overflow
 		m_Runtime = make_ref(Scene);
 		m_Runtime->Name() = "Runtime";
 		auto entity = m_Runtime->CreateEntity();
+		entity.Name() = "Entt1";
 		entity.AddComponent<Render3D>();
 
 		auto entity2 = m_Runtime->CreateEntity();
+		entity2.Name() = "Child1";
 		auto entity3 = m_Runtime->CreateEntity();
+		entity3.Name() = "Child2";
 		auto entity4 = m_Runtime->CreateEntity();
+		entity4.Name() = "base1";
 		auto entity5 = m_Runtime->CreateEntity();
+		entity5.Name() = "base2";
 
 		entity2.SetParent(entity);
 		entity3.SetParent(entity);

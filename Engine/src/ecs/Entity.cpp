@@ -22,11 +22,16 @@ namespace overflow
 		}
 
 		parent = entity;
-		ChildComponent childComp;
-		if(!m_Scene->m_Registry.any_of<ChildComponent>(parent))
-			childComp = m_Scene->m_Registry.emplace<ChildComponent>(parent);
-		else childComp = m_Scene->m_Registry.get<ChildComponent>(parent);
 
-		childComp.Children.push_back(m_Entity);
+		if(m_Scene->m_Registry.any_of<ChildComponent>(parent))
+		{
+			ChildComponent& childComp = m_Scene->m_Registry.get<ChildComponent>(parent);
+			childComp.Children.push_back(m_Entity);
+		}
+		else
+		{
+			ChildComponent& childComp = m_Scene->m_Registry.emplace<ChildComponent>(parent);
+			childComp.Children.push_back(m_Entity);
+		}
 	}
 }

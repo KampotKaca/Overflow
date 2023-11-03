@@ -1,6 +1,7 @@
 #ifndef EDITOR_UTILS_H
 #define EDITOR_UTILS_H
 
+#include <imgui_internal.h>
 #include "overflow.h"
 
 namespace overflow::edit

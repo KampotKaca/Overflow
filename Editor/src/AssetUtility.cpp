@@ -13,11 +13,94 @@ namespace overflow::edit::utils
 		{ ".mat",   AssetType::Material },
 	};
 
+	const std::unordered_map<std::string, AssetType> s_Formats =
+	{
+		{ ".png", AssetType::Tex2D },
+		{ ".jpg", AssetType::Tex2D },
+		{ ".obj", AssetType::Mesh },
+		{ ".fbx", AssetType::Mesh },
+	};
+
 	void LoadEditorAssets()
 	{
+		TryCreateTemporaries(RES_PATH, RES_PATH);
+
 		LoadAssetsByExtension(RES_PATH, RES_PATH, ".sha");
 		LoadAssetsByExtension(RES_PATH, RES_PATH, ".tex");
 		LoadAssetsByExtension(RES_PATH, RES_PATH, ".mat");
+	}
+
+	void TryCreateTemporaries(const std::filesystem::path &root, const std::filesystem::path &loc, const std::filesystem::path &lPath)
+	{
+		std::vector<std::filesystem::path> validFiles;
+		std::vector<std::filesystem::path> folders;
+
+		for (const std::filesystem::directory_entry& entry : std::filesystem::directory_iterator(loc))
+		{
+			if (is_directory(entry.status())) folders.push_back(entry.path());
+			else if (is_regular_file(entry.status()) && s_Formats.find(entry.path().extension().string()) != s_Formats.end())
+				validFiles.push_back((std::filesystem::path)entry.path().generic_string());
+		}
+
+		while (!validFiles.empty())
+		{
+			std::string ext = validFiles.begin()->extension().string();
+			auto it = s_Formats.find(ext);
+			switch (it->second)
+			{
+				default: break;
+				case AssetType::Tex2D: CreateTex2DAsset(*validFiles.begin(), lPath); break;
+				case AssetType::Mesh: CreateMeshAsset(*validFiles.begin(), lPath); break;
+			}
+
+			validFiles.erase(validFiles.begin());
+		}
+
+		for (auto& entry : folders)
+		{
+			std::filesystem::path newLPath = lPath;
+			newLPath /= entry.filename();
+			TryCreateTemporaries(root, entry, newLPath.generic_string());
+		}
+	}
+
+	void CreateTex2DAsset(const std::filesystem::path &loc, const std::filesystem::path &lPath)
+	{
+		std::filesystem::path newPath = loc.parent_path();
+		newPath /= loc.stem();
+		newPath += ".tex";
+		newPath = newPath.generic_string();
+		if(!std::filesystem::exists(newPath))
+		{
+			Serializer doc(newPath);
+			doc.Push("__uuid", UUID());
+
+			std::filesystem::path localPath = lPath.generic_string();
+			localPath /= loc.filename().string();
+
+			doc.Push("texPath", localPath.string());
+			doc.Push("filter", 9729);
+			doc.Push("wrap", 10497);
+			doc.Push("mipmaps", true);
+
+			doc.Save();
+		}
+	}
+
+	void CreateMeshAsset(const std::filesystem::path &loc, const std::filesystem::path &lPath)
+	{
+		std::filesystem::path newPath = loc.stem();
+		newPath += ".mesh";
+
+		Serializer doc(newPath);
+		doc.Push("__uuid", UUID());
+
+		std::string localPath = lPath.generic_string();
+		localPath += loc.filename().string();
+
+		doc.Push("meshPath", localPath);
+
+		doc.Save();
 	}
 
 	void LoadAssetsByExtension(const std::filesystem::path &root, const std::filesystem::path &loc, const std::string& ext)

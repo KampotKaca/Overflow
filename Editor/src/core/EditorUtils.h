@@ -77,6 +77,8 @@ namespace overflow::edit
 	bool DrawVector(const char* label, vec2i& vec, int32_t resetValue = 0.0f);
 	bool DrawVector(const char* label, vec3i& vec, int32_t resetValue = 0.0f);
 	bool DrawVector(const char* label, vec4i& vec, int32_t resetValue = 0.0f);
+
+	bool DrawColor(const char* label, vec4& vec);
 	//endregion
 	//region Search
 	bool Draw_AssetSelection(const char* label, Asset*& selected, AssetType type,
@@ -90,6 +92,8 @@ namespace overflow::edit
 	bool Draw_AssetSelection(const char* label, Material*& selected,
 	                          int singleLineCount = 20, float columnWidth = 100.0f);
 	//endregion
+
+	uint32_t Draw_DropField(const char* label, Tex2D* textures, int size);
 }
 
 #endif //EDITOR_UTILS_H

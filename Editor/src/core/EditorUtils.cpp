@@ -163,8 +163,23 @@ namespace overflow::edit
 	bool DrawVector(const char* label, vec3i& vec, int32_t resetValue) { return DrawVectorN(label, ImGuiDataType_S32, 3, &vec.x, &resetValue); }
 	bool DrawVector(const char* label, vec4i& vec, int32_t resetValue) { return DrawVectorN(label, ImGuiDataType_S32, 4, &vec.x, &resetValue); }
 
-//endregion
+	bool DrawColor(const char* label, vec4& vec)
+	{
+		bool valueChanged = false;
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		VAR_NAME
 
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+		valueChanged = ImGui::ColorEdit4(label, &vec[0],
+										 ImGuiColorEditFlags_NoLabel |
+										 ImGuiColorEditFlags_NoSidePreview);
+
+		ImGui::PopStyleVar();
+
+		ImGui::Spacing();
+		return valueChanged;
+	}
+//endregion
 	//region Search
 	struct AssetResult
 	{
@@ -336,4 +351,20 @@ namespace overflow::edit
 		return false;
 	}
 	//endregion
+	uint32_t Draw_DropField(const char* label, Tex2D* textures, int size)
+	{
+		ImGuiWindow* window = ImGui::GetCurrentWindow();
+		if (window->SkipItems) return false;
+
+		int result = 0;
+		result += BIT(ImGui::TreeNodeBehavior(window->GetID(label), ImGuiTreeNodeFlags_CollapsingHeader, label));
+		ImGui::SameLine();
+
+		for (int i = 0; i < size; ++i)
+		{
+			result += BIT((i + 1) * ImGui::ImageButton((ImTextureID)(uint64_t)textures[i].TexID(), { 15, 15 }));
+		}
+
+		return result;
+	}
 }

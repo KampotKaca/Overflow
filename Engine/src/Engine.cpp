@@ -28,6 +28,7 @@ namespace overflow
 		entity3.Name() = "Child2";
 		auto entity4 = m_Runtime->CreateEntity();
 		entity4.Name() = "base1";
+		entity4.AddComponent<Render2D>();
 		auto entity5 = m_Runtime->CreateEntity();
 		entity5.Name() = "base2";
 

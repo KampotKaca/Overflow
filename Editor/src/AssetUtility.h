@@ -8,7 +8,12 @@
 namespace overflow::edit::utils
 {
 	void LoadEditorAssets();
+	void TryCreateTemporaries(const std::filesystem::path &root, const std::filesystem::path &loc, const std::filesystem::path &lPath = "");
 	void LoadAssetsByExtension(const std::filesystem::path &root, const std::filesystem::path &loc, const std::string& ext);
+
+	void CreateTex2DAsset(const std::filesystem::path &loc, const std::filesystem::path &lPath);
+	void CreateMeshAsset(const std::filesystem::path &loc, const std::filesystem::path &lPath);
+
 	Asset* LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload = false);
 	Asset* LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
 	Asset* LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid);

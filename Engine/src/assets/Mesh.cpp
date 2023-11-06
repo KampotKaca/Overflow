@@ -4,7 +4,7 @@
 namespace overflow
 {
 	Mesh::Mesh(UUID uuid, std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices)
-		: m_UUID(uuid), m_Vertices(std::move(vertices)), m_Indices(std::move(indices))
+		: Asset(uuid), m_Vertices(std::move(vertices)), m_Indices(std::move(indices))
 	{
 		m_VAO = make_ref(VAO);
 		m_VAO->Bind();

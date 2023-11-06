@@ -64,7 +64,6 @@ namespace overflow
 		vec4 Color = vec4(1);
 		Tex2D* Texture = nullptr;
 		Material* Material = nullptr;
-		bool CastShadows = true;
 	};
 
 	struct Render3D
@@ -75,7 +74,7 @@ namespace overflow
 
 		Mesh* Mesh = nullptr;
 		Material* Material = nullptr;
-		bool CastShadows = true;
+		bool Shadows = true;
 	};
 }
 

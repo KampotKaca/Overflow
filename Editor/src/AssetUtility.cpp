@@ -4,6 +4,7 @@
 
 namespace overflow::edit::utils
 {
+	static std::unordered_map<uint64_t, EditorAsset> s_Assets;
 	const std::unordered_map<std::string, AssetType> s_Types =
 	{
 		{ ".sha",   AssetType::Shader },
@@ -33,7 +34,7 @@ namespace overflow::edit::utils
 		}
 	}
 
-	void* LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload)
+	Asset* LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload)
 	{
 		if(!std::filesystem::exists(location))
 		{
@@ -51,21 +52,25 @@ namespace overflow::edit::utils
 		Deserializer doc(location);
 		uint64_t uuid;
 		doc.GetUInt64("__uuid", uuid, UUID());
-		void* existent = AssetPipeline::Find((UUID)uuid);
+		Asset* existent = AssetPipeline::Find((UUID)uuid);
 
 		if(!(existent == nullptr || reload)) return existent;
 
 		AssetType type = it->second;
+		Asset* asset;
 		switch (type)
 		{
-			case AssetType::Shader:     return LoadShader(root, doc, (UUID)uuid);
-			case AssetType::Tex2D:      return LoadTex2D(root, doc, (UUID)uuid);
-			case AssetType::Mesh:       return LoadMesh(root, doc, (UUID)uuid);
-			case AssetType::Material:   return LoadMaterial(root, doc, (UUID)uuid);
+			case AssetType::Shader:     asset = LoadShader(root, doc, (UUID)uuid);   break;
+			case AssetType::Tex2D:      asset = LoadTex2D(root, doc, (UUID)uuid);    break;
+			case AssetType::Mesh:       asset = LoadMesh(root, doc, (UUID)uuid);     break;
+			case AssetType::Material:   asset = LoadMaterial(root, doc, (UUID)uuid); break;
 		}
+
+		s_Assets[asset->GetUUID()] = EditorAsset{ asset, type, location.filename().stem().string(), "", location };
+		return asset;
 	}
 
-	void* LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	Asset* LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		std::string tempStr;
 		std::filesystem::path vPath;
@@ -121,7 +126,7 @@ namespace overflow::edit::utils
 		return AssetPipeline::CreateShader(uuid, vSource, fSource, true);
 	}
 
-	void* LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	Asset* LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		std::string tempStr;
 		if(!doc.GetString("texPath", tempStr))
@@ -151,7 +156,7 @@ namespace overflow::edit::utils
 			numChannels, filter, wrap, mipmaps, true);
 	}
 
-	void* LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	Asset* LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		std::string tempStr;
 		if(!doc.GetString("meshPath", tempStr))
@@ -186,7 +191,7 @@ namespace overflow::edit::utils
 		doc.PopArray();\
 	}
 
-	void* LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	Asset* LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		uint64_t shaderId;
 		if(!doc.GetUInt64("shader", shaderId))
@@ -226,5 +231,13 @@ namespace overflow::edit::utils
 	void* LoadScene(const std::filesystem::path &location)
 	{
 		return nullptr;
+	}
+
+	EditorAsset GetAsset(UUID uuid) { return s_Assets[uuid]; }
+
+	void FindAssets(AssetType type, std::vector<EditorAsset>& assets)
+	{
+		for (auto& item : s_Assets)
+			if(item.second.Type == type) assets.push_back(item.second);
 	}
 }

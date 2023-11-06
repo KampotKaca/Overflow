@@ -55,6 +55,7 @@ namespace overflow::edit
 	bool DrawString(const char* label, std::string& v);
 	bool DrawStringBox(const char* label, std::string& v);
 
+	bool DrawBool(const char* label, bool& v);
 	bool DrawNumber(const char* label, int16_t& v);
 	bool DrawNumber(const char* label, uint16_t& v);
 	bool DrawNumber(const char* label, int32_t& v);
@@ -76,6 +77,18 @@ namespace overflow::edit
 	bool DrawVector(const char* label, vec2i& vec, int32_t resetValue = 0.0f);
 	bool DrawVector(const char* label, vec3i& vec, int32_t resetValue = 0.0f);
 	bool DrawVector(const char* label, vec4i& vec, int32_t resetValue = 0.0f);
+	//endregion
+	//region Search
+	bool Draw_AssetSelection(const char* label, Asset*& selected, AssetType type,
+	                         int singleLineCount = 20, float columnWidth = 100.0f);
+	bool Draw_AssetSelection(const char* label, Shader*& selected,
+	                               int singleLineCount = 20, float columnWidth = 100.0f);
+	bool Draw_AssetSelection(const char* label, Tex2D*& selected,
+	                          int singleLineCount = 20, float columnWidth = 100.0f);
+	bool Draw_AssetSelection(const char* label, Mesh*& selected,
+	                          int singleLineCount = 20, float columnWidth = 100.0f);
+	bool Draw_AssetSelection(const char* label, Material*& selected,
+	                          int singleLineCount = 20, float columnWidth = 100.0f);
 	//endregion
 }
 

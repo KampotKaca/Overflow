@@ -8,9 +8,9 @@ namespace overflow
 	std::unordered_map<uint64_t, Mesh> AssetPipeline::s_Meshes;
 	std::unordered_map<uint64_t, Material> AssetPipeline::s_Materials;
 
-	void* AssetPipeline::Find(UUID uuid)
+	Asset* AssetPipeline::Find(UUID uuid)
 	{
-		void* val;
+		Asset* val;
 		val = GetShader(uuid);
 		if(val != nullptr) return val;
 		val = GetTex2D(uuid);

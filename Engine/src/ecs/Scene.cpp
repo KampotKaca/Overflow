@@ -29,7 +29,7 @@ namespace overflow
 			{
 				transform,
 				render3d.Material,
-				render3d.CastShadows
+				render3d.Shadows
 			});
 		}
 
@@ -41,7 +41,6 @@ namespace overflow
 			{
 				transform,
 				render2d.Material,
-				render2d.CastShadows
 			});
 		}
 	}

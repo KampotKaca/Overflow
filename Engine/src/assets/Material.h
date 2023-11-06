@@ -3,10 +3,11 @@
 
 #include "Shader.h"
 #include "Tex2D.h"
+#include "Asset.h"
 
 namespace overflow
 {
-	class Material
+	class Material : public Asset
 	{
 	public:
 		Material() = default;
@@ -26,7 +27,6 @@ namespace overflow
 		void SetShader(Shader* shader);
 
 	private:
-		UUID m_UUID;
 		Shader* m_Shader = nullptr;
 		std::unordered_map<int, float> m_Floats;
 		std::unordered_map<int, vec2> m_Vec2s;

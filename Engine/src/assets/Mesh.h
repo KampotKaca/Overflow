@@ -3,6 +3,7 @@
 
 #include "core/utils.h"
 #include "rendering/Buffer.h"
+#include "Asset.h"
 
 namespace overflow
 {
@@ -13,7 +14,7 @@ namespace overflow
 		vec2 UV;
 	};
 
-	class Mesh
+	class Mesh : public Asset
 	{
 	public:
 		Mesh() = default;
@@ -24,8 +25,6 @@ namespace overflow
 		static void UnBind();
 
 	private:
-		UUID m_UUID;
-
 		ref<VAO> m_VAO;
 		ref<VBO> m_VBO;
 		ref<EBO> m_EBO;

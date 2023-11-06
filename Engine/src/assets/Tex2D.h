@@ -2,10 +2,11 @@
 #define TEX2D_H
 
 #include "core/utils.h"
+#include "Asset.h"
 
 namespace overflow
 {
-	class Tex2D
+	class Tex2D : public Asset
 	{
 	public:
 		Tex2D() = default;
@@ -20,7 +21,6 @@ namespace overflow
 			glBindTexture(GL_TEXTURE_2D, m_TexID);
 		}
 
-		[[nodiscard]] UUID GetUUID()const { return m_UUID; }
 		[[nodiscard]] vec2i Size()const { return m_Size; }
 		[[nodiscard]] int NumChannels()const { return m_NumColCh; }
 		[[nodiscard]] uint32_t TexID()const { return m_TexID; }
@@ -30,7 +30,6 @@ namespace overflow
 		[[nodiscard]] bool MipMaps() const { return m_MipMaps; }
 
 	private:
-		UUID m_UUID;
 		uint32_t m_TexID = 0;
 		vec2i m_Size = vec2i();
 		int m_NumColCh = 0, m_Filter = GL_LINEAR, m_Wrap = GL_REPEAT;

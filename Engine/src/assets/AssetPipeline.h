@@ -12,7 +12,7 @@ namespace overflow
 	class AssetPipeline
 	{
 	public:
-		static void* Find(UUID uuid);
+		static Asset* Find(UUID uuid);
 		static bool Exists(UUID uuid);
 
 		static Shader* GetShader(UUID uuid);

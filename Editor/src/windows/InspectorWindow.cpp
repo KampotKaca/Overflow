@@ -38,7 +38,11 @@ namespace overflow::edit
 				ImGui::TableSetupColumn("##col_1", ImGuiTableColumnFlags_WidthFixed, 80.0f);
 				ImGui::TableSetupColumn("##col_2", ImGuiTableColumnFlags_WidthStretch, 70.0f);
 
-//				auto& trs = entity.GetComponent<Render3D>();
+				auto& r3D = entity.GetComponent<Render3D>();
+
+				edit::Draw_AssetSelection("Mesh", r3D.Mesh);
+				edit::Draw_AssetSelection("Material", r3D.Material);
+				edit::DrawBool("Shadows", r3D.Shadows);
 
 				ImGui::EndTable();
 			}

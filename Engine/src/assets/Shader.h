@@ -3,6 +3,7 @@
 
 #include "Tex2D.h"
 #include "core/utils.h"
+#include "Asset.h"
 
 namespace overflow
 {
@@ -13,7 +14,7 @@ namespace overflow
 		int Size;
 	};
 
-	class Shader
+	class Shader : public Asset
 	{
 	public:
 		Shader() = default;
@@ -74,7 +75,6 @@ namespace overflow
 		//endregion
 
 	private:
-		UUID m_UUID;
 		uint32_t m_ID = 0;
 		std::unordered_map<std::string, int32_t> m_Locations;
 		std::vector<UniformData> m_UniformData;

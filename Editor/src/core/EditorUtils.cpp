@@ -2,6 +2,7 @@
 #include <imgui_internal.h>
 #include "pch.h"
 #include "EditorUtils.h"
+#include "AssetUtility.h"
 
 namespace overflow::edit
 {
@@ -25,6 +26,20 @@ namespace overflow::edit
 				 ImGui::TableNextColumn();
 
 	//region Basics
+	bool DrawBool(const char* label, bool& v)
+	{
+		bool valueChanged = false;
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+		VAR_NAME
+
+		std::string str = "##";
+		str.append(label);
+		valueChanged = ImGui::Checkbox(str.c_str(), &v);
+
+		ImGui::PopStyleVar();
+		return valueChanged;
+	}
+
 	bool DrawString(const char* label, std::string& v)
 	{
 		static std::string old_String;
@@ -36,7 +51,7 @@ namespace overflow::edit
 		str.append(label);
 
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		if(ImGui::InputText(str.data(), &v[0], 128)) valueChanged = true;
+		valueChanged = ImGui::InputText(str.data(), &v[0], 128);
 		ImGui::PopStyleVar();
 		return valueChanged;
 	}
@@ -50,8 +65,8 @@ namespace overflow::edit
 		std::string str = "##";
 		str.append(label);
 
-		if(ImGui::InputTextMultiline(str.data(), &v[0], 4096,
-		                             { ImGui::GetContentRegionAvail().x, 100.0f })) valueChanged = true;
+		valueChanged = ImGui::InputTextMultiline(str.data(), &v[0], 4096,
+		                             { ImGui::GetContentRegionAvail().x, 100.0f });
 		ImGui::PopStyleVar();
 		return valueChanged;
 	}
@@ -65,7 +80,7 @@ namespace overflow::edit
 		std::string id = "##";
 		id.append(label);
 		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
-		if(ImGui::DragScalar(id.c_str(), data_type, v)) valueChanged = true;
+		valueChanged = ImGui::DragScalar(id.c_str(), data_type, v);
 
 		ImGui::PopStyleVar();
 		return valueChanged;
@@ -149,4 +164,176 @@ namespace overflow::edit
 	bool DrawVector(const char* label, vec4i& vec, int32_t resetValue) { return DrawVectorN(label, ImGuiDataType_S32, 4, &vec.x, &resetValue); }
 
 //endregion
+
+	//region Search
+	struct AssetResult
+	{
+		utils::EditorAsset asset;
+		size_t searchIterator;
+	};
+
+	static const ImVec2 s_DropdownButtonSize = ImVec2(25, 25);
+
+	bool Draw_AssetSelection(const char* label, Asset*& selected, AssetType type,
+	                         int singleLineCount, float columnWidth)
+	{
+		static std::vector<utils::EditorAsset> s_Results;
+		static std::vector<AssetResult> s_Sorted_Results;
+		static bool s_SelectionIsOpen = false;
+		static bool s_SelectionWasOpen = false;
+		static int s_Selection = 0;
+		static std::string s_OldText;
+		static char s_TextBuffer[128] = "";
+
+		strcpy_s(s_TextBuffer, sizeof(s_TextBuffer), s_OldText.c_str());
+		utils::EditorAsset selection;
+
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, { 0, 0 });
+
+		VAR_NAME
+
+		std::string comboName = "none";
+		if(selected != nullptr)
+		{
+			selection = utils::GetAsset(selected->GetUUID());
+			comboName = selection.Name;
+		}
+		std::string comboId = "##";
+		comboId.append(label);
+		ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+
+		s_SelectionWasOpen = s_SelectionIsOpen;
+		bool isOpen = ImGui::BeginCombo(comboId.c_str(), comboName.c_str());
+		if(ImGui::IsItemActivated())
+		{
+			s_Selection = 0;
+			s_Results.clear();
+			s_Sorted_Results.clear();
+			s_SelectionIsOpen = true;
+			utils::FindAssets(type, s_Results);
+			for (auto& asset : s_Results)
+				s_Sorted_Results.push_back({ asset, 0 });
+		}
+
+		bool changed = false;
+
+		if(isOpen)
+		{
+			int maxCount = std::floor((float) s_Sorted_Results.size() / (float) singleLineCount);
+			s_Selection = std::clamp(s_Selection, 0, maxCount);
+			if(ImGui::BeginTable("##__Header", 3, 0, { 0, s_DropdownButtonSize.y }))
+			{
+				ImGui::TableSetupColumn("##col_i_1", ImGuiTableColumnFlags_WidthFixed, s_DropdownButtonSize.x);
+				ImGui::TableSetupColumn("##col_i_2", ImGuiTableColumnFlags_WidthStretch, columnWidth);
+				ImGui::TableSetupColumn("##col_i_3", ImGuiTableColumnFlags_WidthFixed, s_DropdownButtonSize.x);
+				ImGui::TableNextRow();
+				ImGui::TableSetColumnIndex(0);
+				if(ImGui::Button("-", s_DropdownButtonSize))
+				{
+					s_Selection--;
+					s_Selection = std::max(0, s_Selection);
+				}
+				ImGui::TableNextColumn();
+				ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+
+				if(ImGui::InputText("##__text", s_TextBuffer, sizeof s_TextBuffer))
+				{
+					std::string_view newText = s_TextBuffer;
+
+					if(newText != s_OldText)
+					{
+						s_Sorted_Results.clear();
+						for (auto& asset : s_Results)
+						{
+							std::string_view sv = asset.Name;
+							auto it = overflow::utils::i_case_contains(sv, newText);
+							if(it != sv.end())
+								s_Sorted_Results.push_back({ asset, (size_t)std::distance(sv.begin(), it) });
+						}
+						s_OldText = newText;
+						std::sort(s_Sorted_Results.begin(), s_Sorted_Results.end(),
+						          [](const AssetResult& a, const AssetResult& b) {
+							          return a.searchIterator < b.searchIterator;
+						          });
+					}
+				}
+
+				ImGui::TableNextColumn();
+				if(ImGui::Button("+", s_DropdownButtonSize))
+				{
+					s_Selection++;
+					s_Selection = std::min(maxCount, s_Selection);
+				}
+				ImGui::EndTable();
+			}
+			ImGui::Separator();
+			int limit = std::min((s_Selection + 1) * singleLineCount, (int)s_Sorted_Results.size());
+			for (int i = s_Selection * singleLineCount; i < limit; ++i)
+			{
+				if(ImGui::Selectable(s_Sorted_Results[i].asset.Name.c_str(),
+				                     s_Sorted_Results[i].asset.Asset == selected))
+				{
+					selected = s_Sorted_Results[i].asset.Asset;
+					changed = true;
+				}
+
+				ImGui::SameLine(100.0f);
+				ImGui::Text("%s", s_Sorted_Results[i].asset.LocationCompat.c_str());
+			}
+			ImGui::EndCombo();
+		}
+
+		ImGui::PopStyleVar();
+		return changed;
+	}
+
+	bool Draw_AssetSelection(const char* label, Shader*& selected,
+	                          int singleLineCount, float columnWidth)
+	{
+		Asset* asset = selected;
+		if(Draw_AssetSelection(label, asset, AssetType::Shader,
+								   singleLineCount, columnWidth))
+		{
+			selected = (Shader*)asset;
+			return true;
+		}
+		return false;
+	}
+	bool Draw_AssetSelection(const char* label, Tex2D*& selected,
+	                         int singleLineCount, float columnWidth)
+	{
+		Asset* asset = selected;
+		if(Draw_AssetSelection(label, asset, AssetType::Tex2D,
+		                       singleLineCount, columnWidth))
+		{
+			selected = (Tex2D*)asset;
+			return true;
+		}
+		return false;
+	}
+	bool Draw_AssetSelection(const char* label, Mesh*& selected,
+	                        int singleLineCount, float columnWidth)
+	{
+		Asset* asset = selected;
+		if(Draw_AssetSelection(label, asset, AssetType::Mesh,
+		                       singleLineCount, columnWidth))
+		{
+			selected = (Mesh*)asset;
+			return true;
+		}
+		return false;
+	}
+	bool Draw_AssetSelection(const char* label, Material*& selected,
+	                            int singleLineCount, float columnWidth)
+	{
+		Asset* asset = selected;
+		if(Draw_AssetSelection(label, asset, AssetType::Material,
+		                       singleLineCount, columnWidth))
+		{
+			selected = (Material*)asset;
+			return true;
+		}
+		return false;
+	}
+	//endregion
 }

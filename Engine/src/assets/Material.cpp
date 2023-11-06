@@ -4,7 +4,7 @@
 namespace overflow
 {
 	Material::Material(UUID uuid, Shader* shader)
-	: m_UUID(uuid)
+	: Asset(uuid)
 	{
 		SetShader(shader);
 	}

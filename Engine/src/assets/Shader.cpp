@@ -32,7 +32,7 @@ namespace overflow
 	}
 
 	Shader::Shader(UUID uuid, const std::string& vert, const std::string& frag)
-		: m_UUID(uuid)
+		: Asset(uuid)
 	{
 		uint32_t vShader = CreateShader(GL_VERTEX_SHADER, vert),
 				fShader = CreateShader(GL_FRAGMENT_SHADER, frag);

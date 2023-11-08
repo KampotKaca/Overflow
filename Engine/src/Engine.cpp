@@ -35,13 +35,14 @@ namespace overflow
 		entity2.SetParent(entity);
 		entity3.SetParent(entity);
 
-		Renderer::RunThread();
+//		Renderer::RunThread();
 	}
 
 	void Engine::Render()
 	{
 		s_Window->BeginDraw();
 
+		Renderer::Render();
 		if(s_RenderFunc != nullptr) s_RenderFunc();
 
 		s_Window->EndDraw();

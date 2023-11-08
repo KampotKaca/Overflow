@@ -17,9 +17,10 @@ namespace overflow
 
 		void Bind(int texUnit) const
 		{
-			glActiveTexture(texUnit + GL_TEXTURE0);
-			glBindTexture(GL_TEXTURE_2D, m_TexID);
+			glBindTextureUnit(texUnit + GL_TEXTURE0, m_TexID);
 		}
+
+		static void UnBind() { glBindTexture(GL_TEXTURE_2D, 0); }
 
 		[[nodiscard]] vec2i Size()const { return m_Size; }
 		[[nodiscard]] int NumChannels()const { return m_NumColCh; }

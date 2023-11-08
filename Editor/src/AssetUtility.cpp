@@ -79,8 +79,8 @@ namespace overflow::edit::utils
 			localPath /= loc.filename().string();
 
 			doc.Push("texPath", localPath.string());
-			doc.Push("filter", 9729);
-			doc.Push("wrap", 10497);
+			doc.Push("filter", GL_NEAREST);
+			doc.Push("wrap", GL_REPEAT);
 			doc.Push("mipmaps", true);
 
 			doc.Save();
@@ -226,8 +226,15 @@ namespace overflow::edit::utils
 			return nullptr;
 		}
 
-		int width, height, numChannels;
+		int width = 0, height = 0, numChannels = 0;
+		stbi_set_flip_vertically_on_load(1);
 		byte* data = stbi_load(texPath.string().c_str(), &width, &height, &numChannels, 0);
+
+		if(!data)
+		{
+			CORE_ERROR("Could not load the image {0}, reason: {1}", texPath, stbi_failure_reason());
+			return nullptr;
+		}
 
 		int filter, wrap;
 		bool mipmaps;
@@ -235,8 +242,12 @@ namespace overflow::edit::utils
 		doc.GetInt32("wrap", wrap, GL_REPEAT);
 		doc.GetBool("mipmaps", mipmaps, true);
 
-		return AssetPipeline::CreateTex2D(uuid, data, vec2i{ width, height },
+		auto* tex = AssetPipeline::CreateTex2D(uuid, data, vec2i{ width, height },
 			numChannels, filter, wrap, mipmaps, true);
+
+		stbi_image_free(data);
+
+		return tex;
 	}
 
 	Asset* LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid)

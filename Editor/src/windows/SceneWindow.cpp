@@ -38,6 +38,8 @@ namespace overflow::edit
 				
 			}, m_Buffer);
 
+			Engine::GetRuntime()->SubmitForRendering();
+
 			Renderer::EndSubmission();
 			
 			ImGui::Image((void*)(size_t)m_Buffer->GetColorAttachmentRendererID(0),

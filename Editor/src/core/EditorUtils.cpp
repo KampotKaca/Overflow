@@ -187,8 +187,6 @@ namespace overflow::edit
 		size_t searchIterator;
 	};
 
-	static const ImVec2 s_DropdownButtonSize = ImVec2(25, 25);
-
 	bool Draw_AssetSelection(const char* label, Asset*& selected, AssetType type,
 	                         int singleLineCount, float columnWidth)
 	{
@@ -236,14 +234,15 @@ namespace overflow::edit
 		{
 			int maxCount = std::floor((float) s_Sorted_Results.size() / (float) singleLineCount);
 			s_Selection = std::clamp(s_Selection, 0, maxCount);
-			if(ImGui::BeginTable("##__Header", 3, 0, { 0, s_DropdownButtonSize.y }))
+			float fontSize = ImGui::GetFontSize() + 6;
+			if(ImGui::BeginTable("##__Header", 3, 0, { 0, fontSize }))
 			{
-				ImGui::TableSetupColumn("##col_i_1", ImGuiTableColumnFlags_WidthFixed, s_DropdownButtonSize.x);
+				ImGui::TableSetupColumn("##col_i_1", ImGuiTableColumnFlags_WidthFixed, fontSize);
 				ImGui::TableSetupColumn("##col_i_2", ImGuiTableColumnFlags_WidthStretch, columnWidth);
-				ImGui::TableSetupColumn("##col_i_3", ImGuiTableColumnFlags_WidthFixed, s_DropdownButtonSize.x);
+				ImGui::TableSetupColumn("##col_i_3", ImGuiTableColumnFlags_WidthFixed, fontSize);
 				ImGui::TableNextRow();
 				ImGui::TableSetColumnIndex(0);
-				if(ImGui::Button("-", s_DropdownButtonSize))
+				if(ImGui::Button("<", { fontSize, fontSize }))
 				{
 					s_Selection--;
 					s_Selection = std::max(0, s_Selection);
@@ -274,7 +273,7 @@ namespace overflow::edit
 				}
 
 				ImGui::TableNextColumn();
-				if(ImGui::Button("+", s_DropdownButtonSize))
+				if(ImGui::Button(">", { fontSize, fontSize }))
 				{
 					s_Selection++;
 					s_Selection = std::min(maxCount, s_Selection);
@@ -318,8 +317,20 @@ namespace overflow::edit
 	                         int singleLineCount, float columnWidth)
 	{
 		Asset* asset = selected;
-		if(Draw_AssetSelection(label, asset, AssetType::Tex2D,
-		                       singleLineCount, columnWidth))
+
+		bool isOpen = Draw_AssetSelection(label, asset, AssetType::Tex2D,
+		                                  singleLineCount, columnWidth);
+
+		if(selected != nullptr)
+		{
+			ImGui::SameLine(ImGui::GetContentRegionAvail().x - ImGui::GetFontSize() * 2 - ImGui::GetStyle().ItemSpacing.x);
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 3);
+			float buttonSize = ImGui::GetFontSize();
+
+			ImGui::Image((void*)(size_t)selected->TexID(), { buttonSize, buttonSize });
+		}
+
+		if(isOpen)
 		{
 			selected = (Tex2D*)asset;
 			return true;
@@ -351,20 +362,4 @@ namespace overflow::edit
 		return false;
 	}
 	//endregion
-	uint32_t Draw_DropField(const char* label, Tex2D* textures, int size)
-	{
-		ImGuiWindow* window = ImGui::GetCurrentWindow();
-		if (window->SkipItems) return false;
-
-		int result = 0;
-		result += BIT(ImGui::TreeNodeBehavior(window->GetID(label), ImGuiTreeNodeFlags_CollapsingHeader, label));
-		ImGui::SameLine();
-
-		for (int i = 0; i < size; ++i)
-		{
-			result += BIT((i + 1) * ImGui::ImageButton((ImTextureID)(uint64_t)textures[i].TexID(), { 15, 15 }));
-		}
-
-		return result;
-	}
 }

@@ -92,8 +92,6 @@ namespace overflow::edit
 	bool Draw_AssetSelection(const char* label, Material*& selected,
 	                          int singleLineCount = 20, float columnWidth = 100.0f);
 	//endregion
-
-	uint32_t Draw_DropField(const char* label, Tex2D* textures, int size);
 }
 
 #endif //EDITOR_UTILS_H

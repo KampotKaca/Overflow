@@ -14,14 +14,14 @@ namespace overflow
 		static void EndSubmission();
 		static void RunThread();
 		static void Dispose();
-		
+		static void Render();
+
 	private:
 		static std::vector<Render_Data> m_Data;
 		static Render_Data m_Current;
-		static std::thread m_RenderThread;
+//		static std::thread m_RenderThread;
 		
 		static void ThreadFunction();
-		static void Render();
 	};
 }
 

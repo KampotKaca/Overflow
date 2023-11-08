@@ -69,7 +69,7 @@ namespace overflow::edit
 
 		if(ImGui::Begin(Name(), &p_IsOpen))
 		{
-			if(ImGui::CollapsingHeader(runtime->Label()))
+			if(ImGui::CollapsingHeader(runtime->Label(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				runtime->GetRegistry().each([&](entt::entity id)
 				{

@@ -6,10 +6,23 @@
 namespace overflow::edit
 {
 	const uint64_t OPTIONS_ICON = 6611372567339719348;
+	static Tex2D* s_Options_Icon;
 
 #define OPTIONS(type) \
 	if(ImGui::BeginPopup("Options"))\
-	{ if(ImGui::Selectable("Remove Component")) entity.RemoveComponent<type>(); }
+	{\
+		if(ImGui::Selectable("Remove Component")) entity.RemoveComponent<type>(); \
+        ImGui::EndPopup();\
+	}
+
+#define COMPONENT_START(type, name) \
+    if(!entity.HasComponent<type>()) return;\
+	ImGui::Separator();\
+	bool isOpen = ImGui::CollapsingHeader(name, ImGuiTreeNodeFlags_AllowOverlap);\
+	ImGui::SameLine(ImGui::GetContentRegionAvail().x - ImGui::GetFontSize() - ImGui::GetStyle().ItemSpacing.x);\
+    float buttonSize = ImGui::GetFontSize();\
+	if(ImGui::ImageButton((ImTextureID)(intptr_t)s_Options_Icon->TexID(), ImVec2{ buttonSize, buttonSize }))\
+		ImGui::OpenPopup("Options");
 
 	static void TryDrawTransform(Entity entity)
 	{
@@ -35,10 +48,7 @@ namespace overflow::edit
 
 	static void TryDrawRender3D(Entity entity)
 	{
-		if(!entity.HasComponent<Render3D>()) return;
-
-		ImGui::Separator();
-		bool isOpen = ImGui::CollapsingHeader("Render3D");
+		COMPONENT_START(Render3D, "Render3D")
 
 		if(isOpen)
 		{
@@ -62,15 +72,9 @@ namespace overflow::edit
 
 	static void TryDrawRender2D(Entity entity)
 	{
-		if(!entity.HasComponent<Render2D>()) return;
+		COMPONENT_START(Render2D, "Render2D")
 
-		ImGui::Separator();
-//		bool isOpen = ImGui::CollapsingHeader("Render2D");
-
-		uint32_t res = Draw_DropField("Render2D", AssetPipeline::GetTex2D((UUID)OPTIONS_ICON), 1);
-		if(res & BIT(2)) ImGui::OpenPopup("Options");
-
-		if(res & BIT(1))
+		if(isOpen)
 		{
 			if(ImGui::BeginTable("##__Render_2D__", 2))
 			{
@@ -95,7 +99,12 @@ namespace overflow::edit
 
 	void InspectorWindow::Awake()
 	{
-
+		s_Options_Icon = AssetPipeline::GetTex2D((UUID)OPTIONS_ICON);
+		if(s_Options_Icon == nullptr)
+		{
+			CORE_ERROR("Options Icon asset must exist!!!");
+			return;
+		}
 	}
 
 	void InspectorWindow::Draw()

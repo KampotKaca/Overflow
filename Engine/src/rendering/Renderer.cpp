@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
-#include <thread>
-#include <mutex>
+//#include <thread>
+//#include <mutex>
 #include "Engine.h"
 
 namespace overflow
@@ -11,7 +11,7 @@ namespace overflow
 	
 	std::vector<Render_Data> Renderer::m_Data;
 	Render_Data Renderer::m_Current;
-	std::thread Renderer::m_RenderThread;
+//	std::thread Renderer::m_RenderThread;
 	
 	void Renderer::StartSubmission(const Render_Camera& camera, const ref<FrameBuffer>& buffer)
 	{
@@ -37,8 +37,8 @@ namespace overflow
 	
 	void Renderer::RunThread()
 	{
-		m_RenderThread = std::thread(ThreadFunction);
-		m_RenderThread.detach();
+//		m_RenderThread = std::thread(ThreadFunction);
+//		m_RenderThread.detach();
 	}
 	
 	void Renderer::ThreadFunction()
@@ -53,7 +53,7 @@ namespace overflow
 			
 			auto loopEndTime = std::chrono::high_resolution_clock::now();
 			auto loopDuration = std::chrono::duration_cast<std::chrono::microseconds>(loopEndTime - loopStartTime);
-			
+
 			auto sleepDuration = targetDuration - loopDuration;
 			if (sleepDuration > std::chrono::microseconds(0))
 				std::this_thread::sleep_for(sleepDuration);
@@ -68,6 +68,7 @@ namespace overflow
 			data.Buffer->Bind();
 			data.Buffer->ClearAttachment(1, -1);
 			data.Buffer->UnBind();
+
 			m_Data.erase(m_Data.begin());
 		}
 	}

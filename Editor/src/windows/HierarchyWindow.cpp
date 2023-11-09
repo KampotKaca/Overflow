@@ -71,12 +71,12 @@ namespace overflow::edit
 		{
 			if(ImGui::CollapsingHeader(runtime->Label(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				runtime->GetRegistry().each([&](entt::entity id)
+				for (auto i = runtime->GetRegistry().storage<entt::entity>().end() - 1;
+					i >= runtime->GetRegistry().storage<entt::entity>().begin(); --i)
 				{
-					auto entity = Entity{ id, runtime.get() };
-					if(!entity.HasParent())
-						DrawEntity(entity);
-				});
+					auto entity = Entity{ *i, runtime.get() };
+					if(!entity.HasParent()) DrawEntity(entity);
+				}
 			}
 
 			ImGui::End();

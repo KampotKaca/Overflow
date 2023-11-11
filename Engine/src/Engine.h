@@ -10,6 +10,7 @@ namespace overflow
 	{
 	public:
 		static void Init(const WindowProps& props = WindowProps());
+		static void PostInit();
 
 		static void Dispose();
 		static void Update();

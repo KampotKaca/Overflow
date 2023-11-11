@@ -13,6 +13,14 @@ namespace overflow
 		mat4 Projection;
 	};
 	
+	struct Render2D_Object
+	{
+		Tex2D* Texture;
+		vec4 Color;
+		Material* Material;
+		mat4 Transform;
+	};
+	
 	struct Render_Object
 	{
 		mat4 Transformation;
@@ -25,6 +33,7 @@ namespace overflow
 		Render_Camera Camera;
 		ref<FrameBuffer> Buffer;
 		std::vector<Render_Object> Objects;
+		std::vector<Render2D_Object> Objects2D;
 		bool SubmissionFinished;
 	};
 }

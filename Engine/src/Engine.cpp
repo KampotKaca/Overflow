@@ -16,6 +16,9 @@ namespace overflow
 		log::Init();
 		s_Window = Window::Create(props);
 		CORE_ASSERT(s_Window, "Unable to create window")
+		
+		Renderer::Init();
+		
 		m_Runtime = make_ref(Scene);
 		m_Runtime->Name() = "Runtime";
 		auto entity = m_Runtime->CreateEntity();
@@ -34,8 +37,11 @@ namespace overflow
 
 		entity2.SetParent(entity);
 		entity3.SetParent(entity);
-
-//		Renderer::RunThread();
+	}
+	
+	void Engine::PostInit()
+	{
+		Renderer::Init();
 	}
 
 	void Engine::Render()
@@ -55,6 +61,7 @@ namespace overflow
 
 	void Engine::Dispose()
 	{
+		Renderer::Dispose();
 		Window::Terminate();
 	}
 

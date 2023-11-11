@@ -33,9 +33,11 @@ namespace overflow::edit
 
 		Engine::Init(props);
 		Engine::SetRenderFuncPtr(RenderImGui);
-
+		
 		utils::LoadEditorAssets();
-
+		
+		Engine::PostInit();
+		
 		InitImGui("fonts/noto_sans/Bold.ttf", "fonts/noto_sans/Medium.ttf");
 		
 		m_Camera = make_ref(EditorCamera);

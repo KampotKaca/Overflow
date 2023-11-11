@@ -37,10 +37,12 @@ namespace overflow
 		for (auto& entity : view2d)
 		{
 			auto [transform, render2d] = view2d.get<Transform, Render2D>(entity);
-			Renderer::Submit(Render_Object
+			Renderer::Submit(Render2D_Object
 			{
-				transform,
+				render2d.Texture,
+				render2d.Color,
 				render2d.Material,
+				transform,
 			});
 		}
 	}

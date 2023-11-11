@@ -2,7 +2,6 @@
 #define MESH_H
 
 #include "core/utils.h"
-#include "rendering/Buffer.h"
 #include "Asset.h"
 
 namespace overflow
@@ -25,9 +24,6 @@ namespace overflow
 		static void UnBind();
 
 	private:
-		ref<VAO> m_VAO;
-		ref<VBO> m_VBO;
-		ref<EBO> m_EBO;
 
 		std::vector<Vertex> m_Vertices;
 		std::vector<uint32_t> m_Indices;

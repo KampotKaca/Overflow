@@ -22,6 +22,8 @@ namespace overflow
 		~Shader() { glDeleteProgram(m_ID); }
 
 		[[nodiscard]] uint32_t ShaderID()const { return m_ID; }
+		void Bind()const { glUseProgram(m_ID); }
+		static void UnBind() { glUseProgram(0); }
 		int NameToId(const char *loc);
 
 		//region Uniforms
@@ -61,13 +63,13 @@ namespace overflow
 		void Mat3Arr(const char* loc, int count, const float* f) { glUniformMatrix3fv(NameToId(loc), count, false, f); }
 		void Mat4Arr(const char* loc, int count, const float* f) { glUniformMatrix4fv(NameToId(loc), count, false, f); }
 
-		static void Tex2D(int loc, int texUnit, const ref<Tex2D>& tex)
+		static void Tex2D(int loc, int texUnit, const Tex2D* tex)
 		{
 			tex->Bind(texUnit);
 			glUniform1i(loc, texUnit);
 		}
 
-		void Tex2D(const char* loc, int texUnit, const ref<class Tex2D>& tex)
+		void Tex2D(const char* loc, int texUnit, const class Tex2D* tex)
 		{
 			tex->Bind(texUnit);
 			glUniform1i(NameToId(loc), texUnit);

@@ -36,7 +36,7 @@ namespace overflow
 	{
 		uint32_t vShader = CreateShader(GL_VERTEX_SHADER, vert),
 				fShader = CreateShader(GL_FRAGMENT_SHADER, frag);
-
+		
 		m_ID = glCreateProgram();
 		glAttachShader(m_ID, vShader);
 		glAttachShader(m_ID, fShader);

@@ -10,7 +10,8 @@ namespace overflow
 	public:
 		Asset() = default;
 		Asset(UUID uuid) : m_UUID(uuid) {}
-
+		virtual ~Asset() = default;
+		
 		[[nodiscard]] UUID GetUUID() const { return m_UUID; }
 
 	private:

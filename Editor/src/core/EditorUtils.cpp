@@ -187,7 +187,7 @@ namespace overflow::edit
 		size_t searchIterator;
 	};
 
-	bool Draw_AssetSelection(const char* label, Asset*& selected, AssetType type,
+	bool Draw_AssetSelection(const char* label, ref<Asset>& selected, AssetType type,
 	                         int singleLineCount, float columnWidth)
 	{
 		static std::vector<utils::EditorAsset> s_Results;
@@ -301,22 +301,22 @@ namespace overflow::edit
 		return changed;
 	}
 
-	bool Draw_AssetSelection(const char* label, Shader*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Shader>& selected,
 	                          int singleLineCount, float columnWidth)
 	{
-		Asset* asset = selected;
+		ref<Asset> asset = selected;
 		if(Draw_AssetSelection(label, asset, AssetType::Shader,
 								   singleLineCount, columnWidth))
 		{
-			selected = (Shader*)asset;
+			selected = over_cast(Shader, asset);
 			return true;
 		}
 		return false;
 	}
-	bool Draw_AssetSelection(const char* label, Tex2D*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Tex2D>& selected,
 	                         int singleLineCount, float columnWidth)
 	{
-		Asset* asset = selected;
+		ref<Asset> asset = selected;
 
 		bool isOpen = Draw_AssetSelection(label, asset, AssetType::Tex2D,
 		                                  singleLineCount, columnWidth);
@@ -332,31 +332,31 @@ namespace overflow::edit
 
 		if(isOpen)
 		{
-			selected = (Tex2D*)asset;
+			selected = over_cast(Tex2D, asset);
 			return true;
 		}
 		return false;
 	}
-	bool Draw_AssetSelection(const char* label, Mesh*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Mesh>& selected,
 	                        int singleLineCount, float columnWidth)
 	{
-		Asset* asset = selected;
+		ref<Asset> asset = selected;
 		if(Draw_AssetSelection(label, asset, AssetType::Mesh,
 		                       singleLineCount, columnWidth))
 		{
-			selected = (Mesh*)asset;
+			selected = over_cast(Mesh, asset);
 			return true;
 		}
 		return false;
 	}
-	bool Draw_AssetSelection(const char* label, Material*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Material>& selected,
 	                            int singleLineCount, float columnWidth)
 	{
-		Asset* asset = selected;
+		ref<Asset> asset = selected;
 		if(Draw_AssetSelection(label, asset, AssetType::Material,
 		                       singleLineCount, columnWidth))
 		{
-			selected = (Material*)asset;
+			selected = over_cast(Material, asset);
 			return true;
 		}
 		return false;

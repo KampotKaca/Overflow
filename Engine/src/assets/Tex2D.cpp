@@ -10,10 +10,19 @@ namespace overflow
 	{
 		glGenTextures(1, &m_TexID);
 		glBindTexture(GL_TEXTURE_2D, m_TexID);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Size.x, m_Size.y, 0,
-		             GL_RGBA8, GL_UNSIGNED_BYTE, data);
-
+		
+		CORE_INFO("Create");
+		
+		int channel = GL_RGB;
+		switch (m_NumColCh)
+		{
+			case 2: channel = GL_RG8; break;
+			case 3: channel = GL_RGB8; break;
+			case 4: channel = GL_RGBA8; break;
+		}
+		
+		glTexImage2D(GL_TEXTURE_2D, 0, channel, m_Size.x, m_Size.y, 0, channel, GL_UNSIGNED_BYTE, data);
+		
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, filter);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, filter);
 

@@ -32,10 +32,10 @@ namespace overflow
 	
 	std::vector<Render_Data> Renderer::s_Data;
 	Render_Data Renderer::s_Current;
-	Shader* Renderer::s_2DShader = nullptr;
-	Tex2D* Renderer::s_DefTex = nullptr;
+	ref<Shader> Renderer::s_2DShader = nullptr;
+	ref<Tex2D> Renderer::s_DefTex = nullptr;
 //	std::thread Renderer::m_RenderThread;
-	
+
 	void Renderer::Init()
 	{
 		for (uint32_t i = 0; i < BUFFER_SIZE_2D; ++i)
@@ -48,8 +48,8 @@ namespace overflow
 			s_2DIndices[base + 2] = current + 2;
 
 			s_2DIndices[base + 3] = current + 2;
-			s_2DIndices[base + 4] = current + 3;
-			s_2DIndices[base + 5] = current + 1;
+			s_2DIndices[base + 4] = current + 1;
+			s_2DIndices[base + 5] = current + 3;
 		}
 
 		for (uint32_t i = 0; i < BUFFER_SIZE_2D; ++i)
@@ -68,11 +68,6 @@ namespace overflow
 			}
 		}
 
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
-		glFrontFace(GL_CW);
-		glCullFace(GL_BACK);
-
 //		glGenBuffers(1, &s_CameraUBO);
 //		glBindBuffer(GL_UNIFORM_BUFFER, s_CameraUBO);
 //		glBufferData(GL_UNIFORM_BUFFER, 16 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
@@ -80,8 +75,9 @@ namespace overflow
 //
 //		glBindBufferRange(GL_UNIFORM_BUFFER, CAMERA_UBO_LOC, s_CameraUBO, 0, 16 * sizeof(float));
 //
-		s_2DShader = AssetPipeline::GetShader((UUID)8743652874635287);
-		s_DefTex = AssetPipeline::GetTex2D((UUID)2956874321567890123);
+		s_2DShader = AssetPipeline::GetAsset<Shader>((UUID)8743652874635287);
+		s_DefTex = AssetPipeline::GetAsset<Tex2D>((UUID)2956874321567890123);
+		
 		glGenVertexArrays(1, &s_VAO);
 		glBindVertexArray(s_VAO);
 
@@ -91,7 +87,7 @@ namespace overflow
 
 		glGenBuffers(1, &s_EBO);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_EBO);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, BUFFER_SIZE_2D * 6 * sizeof(uint32_t), s_2DIndices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(s_2DIndices), s_2DIndices, GL_STATIC_DRAW);
 
 		glVertexAttribPointer(0, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(uint32_t), (void*)0);
 		glEnableVertexAttribArray(0);
@@ -127,6 +123,7 @@ namespace overflow
 		}
 		
 		s_Current = Render_Data();
+		Render();
 	}
 	
 	void Renderer::RunThread()
@@ -162,7 +159,12 @@ namespace overflow
 			data.Buffer->Bind();
 			data.Buffer->ClearAttachment(1, -1);
 			
-			glBindVertexArray(s_VAO);
+			glEnable(GL_BLEND);
+			glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			glEnable(GL_DEPTH_TEST);
+			glEnable(GL_CULL_FACE);
+			glFrontFace(GL_CW);
+			glCullFace(GL_BACK);
 			
 //			glBindBuffer(GL_UNIFORM_BUFFER, s_CameraUBO);
 //
@@ -178,19 +180,24 @@ namespace overflow
 //			}
 
 			s_2DShader->Bind();
+			glBindVertexArray(s_VAO);
 			
 //			s_2DShader->Mat4Arr("u_Model", (int)data.Objects2D.size(), &s_2DModel[0][0][0]);
 //			s_2DShader->V4Arr("u_Color", (int)data.Objects2D.size(), &s_2DColor[0][0]);
 			
 //			s_2DShader->Tex2D("u_Texture", 0, s_DefTex);
-
+			
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_EBO);
 			glDrawElements(GL_TRIANGLES, (int)(6 * data.Objects2D.size()), GL_UNSIGNED_INT, nullptr);
 			
+			glBindVertexArray(0);
 			Shader::UnBind();
 
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-			glBindVertexArray(0);
+			
+			glDisable(GL_BLEND);
+			glDisable(GL_DEPTH_TEST);
+			glDisable(GL_CULL_FACE);
 			
 			data.Buffer->UnBind();
 			s_Data.erase(s_Data.begin());

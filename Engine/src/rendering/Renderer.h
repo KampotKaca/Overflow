@@ -21,8 +21,8 @@ namespace overflow
 	private:
 		static std::vector<Render_Data> s_Data;
 		static Render_Data s_Current;
-		static Shader* s_2DShader;
-		static Tex2D* s_DefTex;
+		static ref<Shader> s_2DShader;
+		static ref<Tex2D> s_DefTex;
 //		static std::thread m_RenderThread;
 		
 		static void ThreadFunction();

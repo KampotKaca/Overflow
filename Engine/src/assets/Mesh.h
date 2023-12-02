@@ -18,7 +18,7 @@ namespace overflow
 	public:
 		Mesh() = default;
 		Mesh(UUID uuid, std::vector<Vertex>&& vertices, std::vector<uint32_t>&& indices);
-		~Mesh() = default;
+		~Mesh() override = default;
 
 		void Bind();
 		static void UnBind();

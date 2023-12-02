@@ -14,16 +14,16 @@ namespace overflow::edit::utils
 	void CreateTex2DAsset(const std::filesystem::path &loc, const std::filesystem::path &lPath);
 	void CreateMeshAsset(const std::filesystem::path &loc, const std::filesystem::path &lPath);
 
-	Asset* LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload = false);
-	Asset* LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
-	Asset* LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
-	Asset* LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
-	Asset* LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
+	ref<Asset> LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload = false);
+	ref<Asset> LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
+	ref<Asset> LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
+	ref<Asset> LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
+	ref<Asset> LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid);
 
 	void* LoadScene(const std::filesystem::path &location);
 	struct EditorAsset
 	{
-		Asset* Asset;
+		ref<Asset> Asset;
 		AssetType Type;
 		std::string Name;
 		std::string LocationCompat;

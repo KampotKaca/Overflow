@@ -2,6 +2,7 @@
 #include "Engine.h"
 #include "rendering/Renderer.h"
 #include "ecs/Entity.h"
+#include "assets/AssetPipeline.h"
 
 namespace overflow
 {
@@ -47,8 +48,8 @@ namespace overflow
 	void Engine::Render()
 	{
 		s_Window->BeginDraw();
-
-		Renderer::Render();
+		
+//		Renderer::Render();
 		if(s_RenderFunc != nullptr) s_RenderFunc();
 
 		s_Window->EndDraw();

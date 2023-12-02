@@ -62,8 +62,8 @@ namespace overflow
 
 
 		vec4 Color = vec4(1);
-		Tex2D* Texture = nullptr;
-		Material* Material = nullptr;
+		ref<Tex2D> Texture = nullptr;
+		ref<Material> Material = nullptr;
 	};
 
 	struct Render3D
@@ -72,8 +72,8 @@ namespace overflow
 		Render3D(Render3D&) = default;
 		~Render3D() = default;
 
-		Mesh* Mesh = nullptr;
-		Material* Material = nullptr;
+		ref<Mesh> Mesh = nullptr;
+		ref<Material> Material = nullptr;
 		bool Shadows = true;
 	};
 }

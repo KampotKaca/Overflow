@@ -6,7 +6,7 @@
 namespace overflow::edit
 {
 	const uint64_t OPTIONS_ICON = 6611372567339719348;
-	static Tex2D* s_Options_Icon;
+	static ref<Tex2D> s_Options_Icon;
 
 #define OPTIONS(type) \
 	if(ImGui::BeginPopup("Options"))\
@@ -27,7 +27,7 @@ namespace overflow::edit
 	static void TryDrawTransform(Entity entity)
 	{
 		if(!entity.HasComponent<Transform>()) return;
-
+		
 		ImGui::Separator();
 		if(ImGui::CollapsingHeader("Transform"))
 		{
@@ -99,7 +99,7 @@ namespace overflow::edit
 
 	void InspectorWindow::Awake()
 	{
-		s_Options_Icon = AssetPipeline::GetTex2D((UUID)OPTIONS_ICON);
+		s_Options_Icon = AssetPipeline::GetAsset<Tex2D>((UUID)OPTIONS_ICON);
 		if(s_Options_Icon == nullptr)
 		{
 			CORE_ERROR("Options Icon asset must exist!!!");

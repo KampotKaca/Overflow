@@ -13,11 +13,12 @@ namespace overflow
 		Tex2D(UUID uuid, byte* data, vec2i size,
 			  int numColCh, int filter = GL_LINEAR,
 			  int wrap = GL_REPEAT, bool mipmaps = true);
-		~Tex2D() { glDeleteTextures(1, &m_TexID); }
+		~Tex2D() override { glDeleteTextures(1, &m_TexID); }
 
 		void Bind(int texUnit) const
 		{
-			glBindTextureUnit(texUnit + GL_TEXTURE0, m_TexID);
+			glActiveTexture(texUnit + GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, m_TexID);
 		}
 
 		static void UnBind() { glBindTexture(GL_TEXTURE_2D, 0); }
@@ -29,6 +30,8 @@ namespace overflow
 		[[nodiscard]] int Filter() const { return m_Filter; }
 		[[nodiscard]] int Wrap() const { return m_Wrap; }
 		[[nodiscard]] bool MipMaps() const { return m_MipMaps; }
+		
+		Tex2D& operator=(Tex2D&& other) noexcept { return *this; }
 
 	private:
 		uint32_t m_TexID = 0;

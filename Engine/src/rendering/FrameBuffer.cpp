@@ -178,7 +178,7 @@ namespace overflow
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_RendererID);
 		glViewport(0, 0, (int32_t)m_Spec.Width, (int32_t)m_Spec.Height);
-		glClearColor(0.1f, 0.1f, 0.1f, 1);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 

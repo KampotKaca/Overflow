@@ -117,7 +117,7 @@ namespace overflow::edit::utils
 		}
 	}
 
-	Asset* LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload)
+	ref<Asset> LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload)
 	{
 		if(!std::filesystem::exists(location))
 		{
@@ -135,12 +135,12 @@ namespace overflow::edit::utils
 		Deserializer doc(location);
 		uint64_t uuid;
 		doc.GetUInt64("__uuid", uuid, UUID());
-		Asset* existent = AssetPipeline::Find((UUID)uuid);
+		ref<Asset> existent = AssetPipeline::Find((UUID)uuid);
 
 		if(!(existent == nullptr || reload)) return existent;
 
 		AssetType type = it->second;
-		Asset* asset;
+		ref<Asset> asset;
 		switch (type)
 		{
 			case AssetType::Shader:     asset = LoadShader(root, doc, (UUID)uuid);   break;
@@ -152,8 +152,8 @@ namespace overflow::edit::utils
 		s_Assets[asset->GetUUID()] = EditorAsset{ asset, type, location.filename().stem().string(), "", location };
 		return asset;
 	}
-
-	Asset* LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	
+	ref<Asset> LoadShader(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		std::string tempStr;
 		std::filesystem::path vPath;
@@ -206,10 +206,10 @@ namespace overflow::edit::utils
 		vStream.close();
 		fStream.close();
 
-		return AssetPipeline::CreateShader(uuid, vSource, fSource, true);
+		return AssetPipeline::Create<Shader>(uuid, vSource, fSource);
 	}
-
-	Asset* LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	
+	ref<Asset> LoadTex2D(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		std::string tempStr;
 		if(!doc.GetString("texPath", tempStr))
@@ -242,15 +242,15 @@ namespace overflow::edit::utils
 		doc.GetInt32("wrap", wrap, GL_REPEAT);
 		doc.GetBool("mipmaps", mipmaps, true);
 
-		auto* tex = AssetPipeline::CreateTex2D(uuid, data, vec2i{ width, height },
-			numChannels, filter, wrap, mipmaps, true);
+		auto tex = AssetPipeline::Create<Tex2D>(uuid, data, vec2i{ width, height },
+			numChannels, filter, wrap, mipmaps);
 
 		stbi_image_free(data);
 
 		return tex;
 	}
-
-	Asset* LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	
+	ref<Asset> LoadMesh(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		std::string tempStr;
 		if(!doc.GetString("meshPath", tempStr))
@@ -284,8 +284,8 @@ namespace overflow::edit::utils
 		}\
 		doc.PopArray();\
 	}
-
-	Asset* LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
+	
+	ref<Asset> LoadMaterial(const std::filesystem::path &root, Deserializer& doc, UUID uuid)
 	{
 		uint64_t shaderId;
 		if(!doc.GetUInt64("shader", shaderId))
@@ -294,8 +294,8 @@ namespace overflow::edit::utils
 			return nullptr;
 		}
 
-		auto* shader = AssetPipeline::GetShader((UUID)shaderId);
-		auto* mat = AssetPipeline::CreateMaterial(uuid, shader, true);
+		auto shader = AssetPipeline::GetAsset<Shader>((UUID)shaderId);
+		auto mat = AssetPipeline::Create<Material>(uuid, shader);
 
 		MATERIAL_MAP(float, "floats", mat->SetFloat, GetFloat)
 		MATERIAL_MAP(vec2,  "vec2s",  mat->SetFloat, GetVec2)
@@ -311,7 +311,7 @@ namespace overflow::edit::utils
 				uint64_t v;
 				if (!doc.GetUInt64("var", v))continue;
 
-				auto* tex = AssetPipeline::GetTex2D((UUID)v);
+				auto tex = AssetPipeline::GetAsset<Tex2D>((UUID)v);
 				if(tex != nullptr) mat->SetTex(name.c_str(), tex);
 			}
 			doc.PopArray();

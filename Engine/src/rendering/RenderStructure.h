@@ -15,16 +15,16 @@ namespace overflow
 	
 	struct Render2D_Object
 	{
-		Tex2D* Texture;
+		ref<Tex2D> Texture;
 		vec4 Color;
-		Material* Material;
+		ref<Material> Material;
 		mat4 Transform;
 	};
 	
 	struct Render_Object
 	{
 		mat4 Transformation;
-		Material* Material;
+		ref<Material> Material;
 		bool CastShadows;
 	};
 	

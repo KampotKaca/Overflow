@@ -81,15 +81,16 @@ namespace overflow::edit
 	bool DrawColor(const char* label, vec4& vec);
 	//endregion
 	//region Search
-	bool Draw_AssetSelection(const char* label, Asset*& selected, AssetType type,
+	bool Draw_AssetSelection(const char* label, ref<Asset>& selected, AssetType type,
 	                         int singleLineCount = 20, float columnWidth = 100.0f);
-	bool Draw_AssetSelection(const char* label, Shader*& selected,
+	
+	bool Draw_AssetSelection(const char* label, ref<Shader>& selected,
 	                               int singleLineCount = 20, float columnWidth = 100.0f);
-	bool Draw_AssetSelection(const char* label, Tex2D*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Tex2D>& selected,
 	                          int singleLineCount = 20, float columnWidth = 100.0f);
-	bool Draw_AssetSelection(const char* label, Mesh*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Mesh>& selected,
 	                          int singleLineCount = 20, float columnWidth = 100.0f);
-	bool Draw_AssetSelection(const char* label, Material*& selected,
+	bool Draw_AssetSelection(const char* label, ref<Material>& selected,
 	                          int singleLineCount = 20, float columnWidth = 100.0f);
 	//endregion
 }

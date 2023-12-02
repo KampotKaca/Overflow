@@ -19,7 +19,7 @@ namespace overflow
 	public:
 		Shader() = default;
 		Shader(UUID uuid, const std::string& vert, const std::string& frag);
-		~Shader() { glDeleteProgram(m_ID); }
+		~Shader() override { glDeleteProgram(m_ID); }
 
 		[[nodiscard]] uint32_t ShaderID()const { return m_ID; }
 		void Bind()const { glUseProgram(m_ID); }
@@ -72,6 +72,20 @@ namespace overflow
 		void Tex2D(const char* loc, int texUnit, const class Tex2D* tex)
 		{
 			tex->Bind(texUnit);
+			glUniform1i(NameToId(loc), texUnit);
+		}
+		
+		static void Tex2D(int loc, int texUnit, uint32_t texId)
+		{
+			glActiveTexture(texUnit + GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texId);
+			glUniform1i(loc, texUnit);
+		}
+		
+		void Tex2D(const char* loc, int texUnit, uint32_t texId)
+		{
+			glActiveTexture(texUnit + GL_TEXTURE0);
+			glBindTexture(GL_TEXTURE_2D, texId);
 			glUniform1i(NameToId(loc), texUnit);
 		}
 		//endregion

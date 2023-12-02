@@ -1,15 +1,17 @@
 #include "pch.h"
 #include "Material.h"
 
+#include <utility>
+
 namespace overflow
 {
-	Material::Material(UUID uuid, Shader* shader)
+	Material::Material(UUID uuid, ref<Shader> shader)
 	: Asset(uuid)
 	{
-		SetShader(shader);
+		SetShader(std::move(shader));
 	}
 
-	void Material::SetShader(Shader *shader)
+	void Material::SetShader(const ref<Shader>& shader)
 	{
 		if(shader == m_Shader) return;
 
@@ -110,7 +112,7 @@ namespace overflow
 		it->second = v;
 	}
 
-	void Material::SetTex(const char *key, Tex2D* v)
+	void Material::SetTex(const char *key, ref<Tex2D> v)
 	{
 		if(m_Shader == nullptr)
 		{

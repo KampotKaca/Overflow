@@ -8,21 +8,23 @@ namespace overflow::edit
 	const uint64_t OPTIONS_ICON = 6611372567339719348;
 	static ref<Tex2D> s_Options_Icon;
 
-#define OPTIONS(type) \
-	if(ImGui::BeginPopup("Options"))\
-	{\
-		if(ImGui::Selectable("Remove Component")) entity.RemoveComponent<type>(); \
-        ImGui::EndPopup();\
-	}
-
-#define COMPONENT_START(type, name) \
+#define COMPONENT_START(type, name, oName) \
     if(!entity.HasComponent<type>()) return;\
 	ImGui::Separator();\
 	bool isOpen = ImGui::CollapsingHeader(name, ImGuiTreeNodeFlags_AllowOverlap);\
 	ImGui::SameLine(ImGui::GetContentRegionAvail().x - ImGui::GetFontSize() - ImGui::GetStyle().ItemSpacing.x);\
     float buttonSize = ImGui::GetFontSize();\
 	if(ImGui::ImageButton((ImTextureID)(intptr_t)s_Options_Icon->TexID(), ImVec2{ buttonSize, buttonSize }))\
-		ImGui::OpenPopup("Options");
+		ImGui::OpenPopup(oName);\
+	if(ImGui::BeginPopup(oName))\
+	{\
+		if(ImGui::Selectable("Remove Component"))\
+        {\
+            entity.RemoveComponent<type>();\
+            isOpen = false;\
+        }\
+        ImGui::EndPopup();\
+	}\
 
 	static void TryDrawTransform(Entity entity)
 	{
@@ -48,7 +50,7 @@ namespace overflow::edit
 
 	static void TryDrawRender3D(Entity entity)
 	{
-		COMPONENT_START(Render3D, "Render3D")
+		COMPONENT_START(Render3D, "Render3D", "Options_RD3")
 
 		if(isOpen)
 		{
@@ -65,14 +67,12 @@ namespace overflow::edit
 
 				ImGui::EndTable();
 			}
-
-			OPTIONS(Render3D)
 		}
 	}
 
 	static void TryDrawRender2D(Entity entity)
 	{
-		COMPONENT_START(Render2D, "Render2D")
+		COMPONENT_START(Render2D, "Render2D", "Options_RD2")
 
 		if(isOpen)
 		{
@@ -90,8 +90,6 @@ namespace overflow::edit
 				ImGui::EndTable();
 			}
 		}
-
-		OPTIONS(Render2D)
 	}
 
 #undef OPTIONS

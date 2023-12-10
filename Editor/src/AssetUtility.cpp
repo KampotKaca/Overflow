@@ -227,14 +227,17 @@ namespace overflow::edit::utils
 		}
 
 		int width = 0, height = 0, numChannels = 0;
-		stbi_set_flip_vertically_on_load(1);
+//		stbi_set_flip_vertically_on_load(1);
 		byte* data = stbi_load(texPath.string().c_str(), &width, &height, &numChannels, 0);
 
 		if(!data)
 		{
 			CORE_ERROR("Could not load the image {0}, reason: {1}", texPath, stbi_failure_reason());
+			stbi_image_free(data);
 			return nullptr;
 		}
+
+		if(numChannels == 2) CORE_WARN("Image {0} has 2 channels it might not be correctly loaded", texPath);
 
 		int filter, wrap;
 		bool mipmaps;

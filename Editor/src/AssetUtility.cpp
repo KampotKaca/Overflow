@@ -103,21 +103,21 @@ namespace overflow::edit::utils
 		doc.Save();
 	}
 
-	void LoadAssetsByExtension(const std::filesystem::path &root, const std::filesystem::path &loc, const std::string& ext)
+	void LoadAssetsByExtension(const std::filesystem::path &root, const std::filesystem::path &loc, const std::string& ext, bool isEditorAsset)
 	{
 		for (const auto& entry : std::filesystem::directory_iterator(loc))
 		{
 			if(std::filesystem::is_directory(entry))
 			{
-				LoadAssetsByExtension(root, entry.path(), ext);
+				LoadAssetsByExtension(root, entry.path(), ext, isEditorAsset);
 				continue;
 			}
 
-			if (entry.path().extension() == ext) LoadAsset(root, entry.path());
+			if (entry.path().extension() == ext) LoadAsset(root, entry.path(), isEditorAsset);
 		}
 	}
 
-	ref<Asset> LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool reload)
+	ref<Asset> LoadAsset(const std::filesystem::path &root, const std::filesystem::path &location, bool isEditorAsset)
 	{
 		if(!std::filesystem::exists(location))
 		{
@@ -137,7 +137,7 @@ namespace overflow::edit::utils
 		doc.GetUInt64("__uuid", uuid, UUID());
 		ref<Asset> existent = AssetPipeline::Find((UUID)uuid);
 
-		if(!(existent == nullptr || reload)) return existent;
+		if(existent != nullptr) return existent;
 
 		AssetType type = it->second;
 		ref<Asset> asset;
@@ -149,7 +149,8 @@ namespace overflow::edit::utils
 			case AssetType::Material:   asset = LoadMaterial(root, doc, (UUID)uuid); break;
 		}
 
-		s_Assets[asset->GetUUID()] = EditorAsset{ asset, type, location.filename().stem().string(), "", location };
+		if(!isEditorAsset)
+			s_Assets[asset->GetUUID()] = EditorAsset{ asset, type, location.filename().stem().string(), "", location };
 		return asset;
 	}
 	

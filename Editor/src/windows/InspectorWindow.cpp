@@ -8,13 +8,13 @@ namespace overflow::edit
 	const uint64_t OPTIONS_ICON = 6611372567339719348;
 	static ref<Tex2D> s_Options_Icon;
 
-#define COMPONENT_START(type, name, oName) \
+#define COMPONENT_START(type, buttonId, name, oName) \
     if(!entity.HasComponent<type>()) return;\
 	ImGui::Separator();\
 	bool isOpen = ImGui::CollapsingHeader(name, ImGuiTreeNodeFlags_AllowOverlap);\
 	ImGui::SameLine(ImGui::GetContentRegionAvail().x - ImGui::GetFontSize() - ImGui::GetStyle().ItemSpacing.x);\
     float buttonSize = ImGui::GetFontSize();\
-	if(ImGui::ImageButton((ImTextureID)(intptr_t)s_Options_Icon->TexID(), ImVec2{ buttonSize, buttonSize }))\
+	if(ImGui::ImageButton(buttonId, (ImTextureID)(intptr_t)s_Options_Icon->TexID(), ImVec2{ buttonSize, buttonSize }))\
 		ImGui::OpenPopup(oName);\
 	if(ImGui::BeginPopup(oName))\
 	{\
@@ -50,7 +50,7 @@ namespace overflow::edit
 
 	static void TryDrawRender3D(Entity entity)
 	{
-		COMPONENT_START(Render3D, "Render3D", "Options_RD3")
+		COMPONENT_START(Render3D, "Opt_Btn_RD3", "Render3D", "Options_RD3")
 
 		if(isOpen)
 		{
@@ -72,7 +72,7 @@ namespace overflow::edit
 
 	static void TryDrawRender2D(Entity entity)
 	{
-		COMPONENT_START(Render2D, "Render2D", "Options_RD2")
+		COMPONENT_START(Render2D, "Opt_Btn_RD2", "Render2D", "Options_RD2")
 
 		if(isOpen)
 		{

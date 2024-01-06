@@ -5,7 +5,6 @@
 #include "Editor.h"
 
 #include "SceneWindow.h"
-#include "rendering/Renderer.h"
 
 namespace overflow::edit
 {
@@ -32,19 +31,8 @@ namespace overflow::edit
 				m_Buffer->Resize((int32_t)m_Size.x, (int32_t)m_Size.y);
 			}
 
-			Renderer::StartSubmission(Render_Camera
-			{
-				m_Camera->GetView(),
-				m_Camera->GetProjection(m_Size.x / m_Size.y)
-
-			}, m_Buffer);
-
-			Engine::GetRuntime()->SubmitForRendering();
-
-			Renderer::EndSubmission();
-
-			ImGui::Image((void*)(size_t)m_Buffer->GetColorAttachmentRendererID(0),
-			             m_Size, { 1, 1 }, { 0, 0 });
+//			ImGui::Image((void*)(size_t)m_Buffer->GetColorAttachmentRendererID(0),
+//			             m_Size, { 1, 1 }, { 0, 0 });
 			
 			ImGui::End();
 		}

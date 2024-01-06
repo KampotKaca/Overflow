@@ -5,7 +5,6 @@
 #include "core/utils.h"
 #include "assets/Mesh.h"
 #include "assets/Material.h"
-#include "rendering/RenderStructure.h"
 
 namespace overflow
 {

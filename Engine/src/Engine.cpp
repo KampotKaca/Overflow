@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "Engine.h"
-#include "rendering/Renderer.h"
 #include "ecs/Entity.h"
 #include "assets/AssetPipeline.h"
 
@@ -17,8 +16,6 @@ namespace overflow
 		log::Init();
 		s_Window = Window::Create(props);
 		CORE_ASSERT(s_Window, "Unable to create window")
-		
-		Renderer::Init();
 		
 		m_Runtime = make_ref(Scene);
 		m_Runtime->Name() = "Runtime";
@@ -42,14 +39,13 @@ namespace overflow
 	
 	void Engine::PostInit()
 	{
-		Renderer::Init();
+
 	}
 
 	void Engine::Render()
 	{
 		s_Window->BeginDraw();
-		
-//		Renderer::Render();
+
 		if(s_RenderFunc != nullptr) s_RenderFunc();
 
 		s_Window->EndDraw();
@@ -62,7 +58,7 @@ namespace overflow
 
 	void Engine::Dispose()
 	{
-		Renderer::Dispose();
+
 		Window::Terminate();
 	}
 

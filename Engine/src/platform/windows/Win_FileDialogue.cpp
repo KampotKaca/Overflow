@@ -4,6 +4,7 @@
 
 #include "Win_FileDialogue.h"
 #include "Engine.h"
+#include <shlobj.h>
 
 namespace overflow
 {
@@ -48,6 +49,25 @@ namespace overflow
 		ofn.lpstrDefExt = strchr(filter, '\0') + 1;
 
 		if (GetSaveFileNameA(&ofn) == TRUE) return ofn.lpstrFile;
+
+		return {};
+	}
+
+	std::string Win_FileDialogue::OpenFolder(const char* duty)
+	{
+		BROWSEINFO bi = { nullptr };
+		TCHAR szPath[MAX_PATH];
+
+		bi.lpszTitle = duty;
+		bi.ulFlags = BIF_BROWSEFORCOMPUTER | BIF_RETURNONLYFSDIRS;
+		LPITEMIDLIST pidl = SHBrowseForFolder(&bi);
+
+		if (pidl != nullptr)
+		{
+			SHGetPathFromIDList(pidl, szPath);
+			CoTaskMemFree(pidl);
+			return szPath;
+		}
 
 		return {};
 	}

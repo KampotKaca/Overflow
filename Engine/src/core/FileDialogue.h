@@ -11,6 +11,7 @@ namespace overflow
 		virtual ~FileDialogue() = default;
 
 		virtual std::string OpenFile(const char* filter) = 0;
+		virtual std::string OpenFolder(const char* duty) = 0;
 		virtual std::string SaveFile(const char* filter) = 0;
 
 		static ref<FileDialogue> CreateFileDialogue();

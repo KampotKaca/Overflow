@@ -18,8 +18,9 @@
 
 namespace overflow::edit
 {
-	ref<EditorCamera> Editor::m_Camera = nullptr;
-	
+	ref<EditorCamera> Editor::s_Camera = nullptr;
+	Project Editor::s_Project;
+
 	void Editor::Init()
 	{
 		WindowProps props = WindowProps();
@@ -40,7 +41,7 @@ namespace overflow::edit
 		
 		InitImGui("fonts/noto_sans/Bold.ttf", "fonts/noto_sans/Medium.ttf");
 		
-		m_Camera = make_ref(EditorCamera);
+		s_Camera = make_ref(EditorCamera);
 		
 		EditorWindowManager::Create<MenubarWindow>("Menubar");
 		EditorWindowManager::Create<HierarchyWindow>("Hierarchy");
@@ -193,5 +194,62 @@ namespace overflow::edit
 		EditorWindowManager::DrawAll();
 
 		End();
+	}
+
+	bool Editor::OpenProject(const std::filesystem::path &projectFilePath)
+	{
+		if(!std::filesystem::exists(projectFilePath)) return false;
+
+		auto projPath = (projectFilePath / "Overflow.proj").generic_string();
+
+		if(IsAnyProjectOpen()) CloseProject();
+
+		Project current = Project();
+		current.Path = projectFilePath.generic_string();
+
+		Deserializer doc = Deserializer(projPath);
+		std::string tempString;
+		if(doc.GetString("AssetFolder", tempString))
+		{
+			current.AssetFolder = (projectFilePath / tempString).generic_string();
+			current.AssetFolder.append("/");
+		}
+		else return false;
+
+		if(doc.GetString("ResourceFolder", tempString))
+		{
+			current.ResourceFolder = (projectFilePath / tempString).generic_string();
+			current.ResourceFolder.append("/");
+		}
+		else return false;
+
+		if(!std::filesystem::exists(current.ResourceFolder))
+			std::filesystem::create_directory(current.ResourceFolder);
+
+		if(!std::filesystem::exists(current.AssetFolder))
+			std::filesystem::create_directory(current.AssetFolder);
+
+		s_Project = current;
+
+		return true;
+	}
+
+	void Editor::CloseProject()
+	{
+		s_Project = Project();
+	}
+
+	bool Editor::CreateProject(const std::filesystem::path &projectFilePath)
+	{
+		if(!std::filesystem::exists(projectFilePath)) return false;
+
+		auto projPath = (projectFilePath / "Overflow.proj").generic_string();
+		Serializer doc = Serializer(projPath);
+		doc.Push("AssetFolder", (std::string)"Assets");
+		doc.Push("ResourceFolder", (std::string)"Resources");
+
+		doc.Save();
+
+		return OpenProject(projectFilePath);
 	}
 }

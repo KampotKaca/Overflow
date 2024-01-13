@@ -12,6 +12,7 @@ namespace overflow
 		~Win_FileDialogue() override = default;
 
 		std::string OpenFile(const char *filter) override;
+		std::string OpenFolder(const char* duty) override;
 		std::string SaveFile(const char *filter) override;
 	};
 }
